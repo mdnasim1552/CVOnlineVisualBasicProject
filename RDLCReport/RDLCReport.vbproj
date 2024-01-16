@@ -104,6 +104,8 @@
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
     </None>
+    <None Include="My Project\DataSources\CVEntity.EducationalQualification.datasource" />
+    <None Include="My Project\DataSources\CVEntity.Employee.datasource" />
     <None Include="My Project\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CustomToolNamespace>My</CustomToolNamespace>
@@ -128,9 +130,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OnlineCV\OnlineCV.vbproj">
-      <Project>{cd8e53d2-b177-494b-ae08-1ceef98e43d7}</Project>
-      <Name>OnlineCV</Name>
+    <ProjectReference Include="..\CVEntity\CVEntity.vbproj">
+      <Project>{03733d74-a26d-48e1-9927-a752227eff08}</Project>
+      <Name>CVEntity</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

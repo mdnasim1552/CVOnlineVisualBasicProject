@@ -1,6 +1,7 @@
 ﻿Imports System.Data.SqlClient
 Imports System.IO
 Imports System.Security.Cryptography
+Imports CVEntity
 Imports Newtonsoft.Json
 Imports Newtonsoft.Json.Linq
 
