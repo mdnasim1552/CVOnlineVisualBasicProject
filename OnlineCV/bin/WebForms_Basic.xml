@@ -37,6 +37,42 @@ OnlineCV
  Returns the Asp log object.
  </summary>
 </member>
+<member name="F:OnlineCV.About._UpdatePanel1">
+<summary>
+UpdatePanel1 control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.About._page_Id">
+<summary>
+page_Id control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.About._ddlpagesize">
+<summary>
+ddlpagesize control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.About._gvapplicant">
+<summary>
+gvapplicant control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
 <member name="F:OnlineCV._Default._UpdatePanel1">
 <summary>
 UpdatePanel1 control.
@@ -184,6 +220,33 @@ To modify move field declaration from designer file to code-behind file.
 <member name="F:OnlineCV.SiteMaster._MainContent">
 <summary>
 MainContent control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.SiteMaster._lnkbtnRecalculate">
+<summary>
+lnkbtnRecalculate control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.SiteMaster._lnkbtnSave">
+<summary>
+lnkbtnSave control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.SiteMaster._lnkbtnDelete">
+<summary>
+lnkbtnDelete control.
 </summary>
 <remarks>
 Auto-generated field.

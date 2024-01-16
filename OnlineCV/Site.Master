@@ -11,10 +11,10 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
-
-    <webopt:bundlereference runat="server" path="~/Content/css" />
+    <link href="Content/mystyle.css" rel="stylesheet" />
+    <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 </head>
 <body>
     <form runat="server">
@@ -47,7 +47,7 @@
                 <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" runat="server" href="~/About">About</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/ApplicantList">Applicant List</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/Contact">Contact</a></li>
                     </ul>
                 </div>
@@ -57,8 +57,22 @@
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
             <hr />
-            <footer>
-                <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
+            <footer class="app-footer fixed-bottom p-1" style="background-color: #EEEEEE;">
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <span>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</span>
+                    </div>
+                    <div class="col-md-4" style="text-align: right;">
+                        <asp:LinkButton ID="lnkbtnRecalculate" Visible="false" runat="server" CssClass="btn btn-sm btn-secondary" OnClick="lnkbtnRecalculate_Click"><i class="fas fa-sync"></i>&nbsp;Recalculate</asp:LinkButton>
+                        <asp:LinkButton ID="lnkbtnSave" Visible="false" ClientIDMode="Static" OnClientClick="return confirm('Do You want to Save?');" runat="server" CssClass="btn btn-sm btn-success" Style="margin: 0 5px;" OnClick="lnkbtnSave_Click"><i class="fa fa-save" aria-hidden="true"></i>&nbsp;Save</asp:LinkButton>
+                        <asp:LinkButton ID="lnkbtnDelete" Visible="false" runat="server" OnClick="lnkbtnDelete_Click" CssClass="btnDelete btncommon " Style="margin: 0 5px;"><i class="fa fa-minus-square-o" aria-hidden="true"></i> Delete</asp:LinkButton>
+                    </div>
+                    
+                </div>
+
+                
+                <%--<p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>--%>
             </footer>
         </div>
     </form>
