@@ -34,7 +34,7 @@ Public Class _Default
         Dim myTableData = New List(Of EducationalQualification)
         Dim jsonData = MyData.Value
         myTableData = JsonConvert.DeserializeObject(Of List(Of EducationalQualification))(jsonData)
-        Dim photoUrl = Me.UploadUserImage()
+        Dim photoUrl As String = Me.UploadUserImage()
         Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT"
 
         Dim jobCallType = "InsertjobapplicationRecord"

@@ -41,6 +41,15 @@ Partial Public Class About
     Protected WithEvents ddlpagesize As Global.System.Web.UI.WebControls.DropDownList
 
     '''<summary>
+    '''ReportListBox control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ReportListBox As Global.System.Web.UI.WebControls.ListBox
+
+    '''<summary>
     '''gvapplicant control.
     '''</summary>
     '''<remarks>
