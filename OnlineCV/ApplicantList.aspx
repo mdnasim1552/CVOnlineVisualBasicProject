@@ -1,55 +1,64 @@
 ﻿<%@ Page Title="About" Async="true" Language="VB" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ApplicantList.aspx.vb" Inherits="OnlineCV.About" %>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <!-- Latest compiled and minified CSS -->
+
     <style>
-        .customStyleOfFormControl {
-            height: 1.5rem !important;
-        }
-
-        .multiselect {
-            width: 274px !important;
-            border: 1px solid;
-            height: 29px;
-            border-color: #cfd1d4;
-            font-family: sans-serif;
-        }
-
-        .multiselect-container {
-            overflow: scroll;
-            max-height: 300px !important;
-        }
-        /*.multiselect {
-            width: 270px !important;
-            text-wrap: initial !important;
-            height: 27px !important;
-        }*/
-
-        .multiselect-text {
-            width: 200px !important;
-        }
-
-        /*.multiselect-container {
-            height: 250px !important;
-            width: 300px !important;
-            overflow-y: scroll !important;
-        }*/
-        .caret {
-            display: none !important;
-        }
-
-        span.multiselect-selected-text {
-            width: 200px !important;
-        }
-
-        #ContentPlaceHolder1_divgrp {
-            /*width: 395px !important;*/
-        }
-
-        .chzn-single {
-            border-radius: 3px !important;
-            height: 29px !important;
+        .SumoSelect .select-all {
+            border-radius: 3px 3px 0 0;
+            position: relative;
+            border-bottom: 1px solid #ddd;
+            background-color: #fff;
+            padding: 5px 0 3px 35px;
+            height: 35px;
+            cursor: pointer;
         }
     </style>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            // Now you can perform operations on specificListBoxID
+            // For example, applying the Multiselect plugin
+            $('#<%= ReportListBox.ClientID%>').SumoSelect({
+                placeholder: 'Select Here',
+                search: true,
+                searchText: 'Enter here.',
+                selectAll: true,
+                okCancelInMulti: true
+            });
+            $('[id*=ListBoxID]').SumoSelect({
+                placeholder: 'Select Here',
+                search: true,
+                searchText: 'Enter here.',
+                selectAll: true,
+                okCancelInMulti: true
+            });
+
+            $('.chzn-select').chosen({ search_contains: true });
+            Sys.WebForms.PageRequestManager.getInstance().add_pageLoaded(pageLoaded);
+
+        });
+        function pageLoaded() {
+
+            $('#<%= ReportListBox.ClientID%>').SumoSelect({
+                placeholder: 'Select Here',
+                search: true,
+                searchText: 'Enter here.',
+                selectAll: true,
+                okCancelInMulti: true
+            });
+
+            $('[id*=ListBoxID]').SumoSelect({
+                placeholder: 'Select Here',
+                search: true,
+                searchText: 'Enter here.',
+                selectAll: true,
+                okCancelInMulti: true
+            });
+            $('.chzn-select').chosen({ search_contains: true });
+        }
+    </script>
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
             <div class="card">
@@ -64,8 +73,8 @@
                     <div class="row">
                         <div class="col-md-2">
                             <asp:Label ID="page_Id" runat="server" CssClass="form-label" Text="Page Size"></asp:Label>
-                            <asp:DropDownList ID="ddlpagesize" runat="server" AutoPostBack="True" CssClass="form-control form-control-sm " Width="70px"
-                                 OnSelectedIndexChanged="ddlpagesize_SelectedIndexChanged">
+                            <asp:DropDownList ID="ddlpagesize" runat="server" AutoPostBack="True" CssClass="form-control form-control-sm"
+                                OnSelectedIndexChanged="ddlpagesize_SelectedIndexChanged">
                                 <asp:ListItem>10</asp:ListItem>
                                 <asp:ListItem>20</asp:ListItem>
                                 <asp:ListItem>30</asp:ListItem>
@@ -81,13 +90,38 @@
                                 <asp:ListItem>3000</asp:ListItem>
                             </asp:DropDownList>
                         </div>
+                        <div class="col-md-4">
+                            <asp:ListBox ID="ReportListBox" runat="server" CssClass="form-control form-control-sm" SelectionMode="Multiple">
+                                <asp:ListItem Value="1">Appointment Letter</asp:ListItem>
+                                <asp:ListItem Value="0">Application Form</asp:ListItem>
+                                <asp:ListItem Value="8">Age Form</asp:ListItem>
+                                <asp:ListItem Value="9">Training Letter</asp:ListItem>
+                                <asp:ListItem Value="7">Nominee Form</asp:ListItem>
+                                <asp:ListItem Value="2">Workers Confirm. Letter</asp:ListItem>
+                                <asp:ListItem Value="3">Evaluation Form</asp:ListItem>
+                                <asp:ListItem Value="4">CPF</asp:ListItem>
+                                <asp:ListItem Value="5">CPF2(N Form)</asp:ListItem>
+                                <asp:ListItem Value="6">CPF3</asp:ListItem>
+                                <asp:ListItem Value="10">Envelope English (Permanent)</asp:ListItem>
+                                <asp:ListItem Value="11">Envelope Bangla (Permanent)</asp:ListItem>
+                                <asp:ListItem Value="12">Envelope English (Present)</asp:ListItem>
+                                <asp:ListItem Value="13">Envelope Bangla (Present)</asp:ListItem>
+                                <asp:ListItem Value="14">Office Envelope</asp:ListItem>
+                                <asp:ListItem Value="15">Joining Letter</asp:ListItem>
+                                <asp:ListItem Value="16">Bank Opening</asp:ListItem>
+                                <asp:ListItem Value="17">Appointment Top Sheet</asp:ListItem>
+                                <asp:ListItem Value="18">Salary Certificate</asp:ListItem>
+                                <asp:ListItem Value="19">Probationary Evaluation Form</asp:ListItem>
+                                <asp:ListItem Value="20">Suspension</asp:ListItem>
+                            </asp:ListBox>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <asp:GridView ID="gvapplicant" runat="server" AutoGenerateColumns="False" AllowPaging="True" Width="100%"
                                 ShowFooter="True" CssClass="table-striped table-hover table-bordered grvContentarea"
-                                 OnRowEditing="gvapplicant_RowEditing"  OnRowCancelingEdit="gvapplicant_RowCancelingEdit" OnRowUpdating="gvapplicant_RowUpdating"
-                                 OnRowDeleting="gvapplicant_RowDeleting"  OnPageIndexChanging="gvapplicant_PageIndexChanging">
+                                OnRowEditing="gvapplicant_RowEditing" OnRowCancelingEdit="gvapplicant_RowCancelingEdit" OnRowUpdating="gvapplicant_RowUpdating"
+                                OnRowDeleting="gvapplicant_RowDeleting" OnPageIndexChanging="gvapplicant_PageIndexChanging">
                                 <PagerSettings NextPageText="Next" PreviousPageText="Previous" Mode="NumericFirstLast" />
                                 <PagerStyle CssClass="gvPagination" />
                                 <HeaderStyle CssClass="grvHeaderNew" />
@@ -97,7 +131,7 @@
                                     <asp:TemplateField HeaderText="Sl">
                                         <ItemTemplate>
                                             <asp:Label ID="slid" runat="server"
-                                                Text='<%# Convert.ToString(Container.DataItemIndex + 1) + "." %>' ></asp:Label>
+                                                Text='<%# Convert.ToString(Container.DataItemIndex + 1) + "." %>'></asp:Label>
                                         </ItemTemplate>
                                         <HeaderStyle HorizontalAlign="center" />
                                         <ItemStyle HorizontalAlign="center" />
@@ -118,8 +152,8 @@
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "id")) %>'
                                                 Style="text-align: left"></asp:Label>
                                         </ItemTemplate>
-                                        <HeaderStyle HorizontalAlign="Center"  />
-                                        <ItemStyle HorizontalAlign="left"  />
+                                        <HeaderStyle HorizontalAlign="Center" />
+                                        <ItemStyle HorizontalAlign="left" />
                                     </asp:TemplateField>
 
                                     <asp:TemplateField HeaderText="Name">
@@ -130,15 +164,15 @@
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "fullname")) %>'></asp:Label>
                                         </ItemTemplate>
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="txtname" runat="server" 
-                                                BorderStyle="None"  Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
+                                            <asp:TextBox ID="txtname" runat="server"
+                                                BorderStyle="None" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "fullname")) %>'></asp:TextBox>
                                         </EditItemTemplate>
                                         <HeaderStyle HorizontalAlign="Center" />
-                                        <ItemStyle HorizontalAlign="left"  />
+                                        <ItemStyle HorizontalAlign="left" />
                                     </asp:TemplateField>
 
-                                     <asp:TemplateField HeaderText="Father's Name">
+                                    <asp:TemplateField HeaderText="Father's Name">
 
                                         <ItemTemplate>
                                             <asp:Label ID="lblfathername" runat="server" BackColor="Transparent"
@@ -146,27 +180,27 @@
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "fathername")) %>'></asp:Label>
                                         </ItemTemplate>
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="txtfathername" runat="server" 
-                                                BorderStyle="None"  Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
+                                            <asp:TextBox ID="txtfathername" runat="server"
+                                                BorderStyle="None" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "fathername")) %>'></asp:TextBox>
                                         </EditItemTemplate>
                                         <HeaderStyle HorizontalAlign="Center" />
-                                        <ItemStyle HorizontalAlign="left"  />
+                                        <ItemStyle HorizontalAlign="left" />
                                     </asp:TemplateField>
 
                                     <asp:TemplateField HeaderText="Email">
 
                                         <ItemTemplate>
                                             <asp:Label ID="lblemail" runat="server" BackColor="Transparent"
-                                                BorderStyle="None"  Width="100%"
+                                                BorderStyle="None" Width="100%"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "email")) %>'></asp:Label>
                                         </ItemTemplate>
                                         <EditItemTemplate>
                                             <asp:TextBox ID="txtemail" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
-                                                Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "email")) %>' >
+                                                Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "email")) %>'>
                                             </asp:TextBox>
                                         </EditItemTemplate>
-                                        <HeaderStyle HorizontalAlign="Center"  />
+                                        <HeaderStyle HorizontalAlign="Center" />
                                         <ItemStyle HorizontalAlign="left" />
                                     </asp:TemplateField>
 
@@ -178,17 +212,17 @@
                                         </ItemTemplate>
                                         <EditItemTemplate>
                                             <asp:TextBox ID="txtMobile" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
-                                                Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "mobile")) %>' >
+                                                Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "mobile")) %>'>
                                             </asp:TextBox>
                                         </EditItemTemplate>
                                         <HeaderStyle HorizontalAlign="Center" />
-                                        <ItemStyle HorizontalAlign="left"/>
+                                        <ItemStyle HorizontalAlign="left" />
                                     </asp:TemplateField>
 
                                     <asp:TemplateField HeaderText="Address">
                                         <ItemTemplate>
                                             <asp:Label ID="lbladdress" runat="server" BackColor="Transparent" Width="100%"
-                                                BorderStyle="None" 
+                                                BorderStyle="None"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "address")) %>'></asp:Label>
                                         </ItemTemplate>
                                         <EditItemTemplate>
@@ -196,83 +230,125 @@
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "address")) %>'>
                                             </asp:TextBox>
                                         </EditItemTemplate>
-                                        <HeaderStyle HorizontalAlign="Center"  />
-                                        <ItemStyle HorizontalAlign="left"  />
+                                        <HeaderStyle HorizontalAlign="Center" />
+                                        <ItemStyle HorizontalAlign="left" />
                                     </asp:TemplateField>
 
-                                     <asp:TemplateField HeaderText="Region">
+                                    <asp:TemplateField HeaderText="Region">
                                         <ItemTemplate>
                                             <asp:Label ID="lblregion" runat="server" BackColor="Transparent" Width="100%"
-                                                BorderStyle="None" 
+                                                BorderStyle="None"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "region")) %>'></asp:Label>
                                         </ItemTemplate>
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="txtregion" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
+                                            <%--<asp:TextBox ID="txtregion" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "region")) %>'>
-                                            </asp:TextBox>
+                                            </asp:TextBox>--%>
+                                            <asp:DropDownList ID="ddlRegion" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;" CssClass="form-control form-control-sm">
+                                                <asp:ListItem Text="Pakistan" />
+                                                <asp:ListItem Text="Iran" />
+                                                <asp:ListItem Text="Iraq" />
+                                                <asp:ListItem Text="Turkey" />
+                                                <asp:ListItem Text="India" />
+                                                <asp:ListItem Text="China" />
+                                            </asp:DropDownList>
                                         </EditItemTemplate>
-                                        <HeaderStyle HorizontalAlign="Center"  />
-                                        <ItemStyle HorizontalAlign="left"  />
+                                        <HeaderStyle HorizontalAlign="Center" />
+                                        <ItemStyle HorizontalAlign="left" />
                                     </asp:TemplateField>
 
-                                     <asp:TemplateField HeaderText="Gender">
+                                    <asp:TemplateField HeaderText="Gender">
                                         <ItemTemplate>
                                             <asp:Label ID="lblgender" runat="server" BackColor="Transparent" Width="100%"
-                                                BorderStyle="None" 
+                                                BorderStyle="None"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "gender")) %>'></asp:Label>
                                         </ItemTemplate>
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="txtgender" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
+                                            <%-- <asp:TextBox ID="txtgender" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "gender")) %>'>
-                                            </asp:TextBox>
+                                            </asp:TextBox>--%>
+                                            <asp:DropDownList ID="ddlGender" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;" CssClass="form-control form-control-sm">
+                                                <asp:ListItem Text="Male" />
+                                                <asp:ListItem Text="Female" />
+                                            </asp:DropDownList>
                                         </EditItemTemplate>
-                                        <HeaderStyle HorizontalAlign="Center"  />
-                                        <ItemStyle HorizontalAlign="left"  />
+                                        <HeaderStyle HorizontalAlign="Center" />
+                                        <ItemStyle HorizontalAlign="left" />
                                     </asp:TemplateField>
 
-                                     <asp:TemplateField HeaderText="Declaration">
+                                    <asp:TemplateField HeaderText="Declaration">
                                         <ItemTemplate>
                                             <asp:Label ID="lbldeclaration" runat="server" BackColor="Transparent" Width="100%"
-                                                BorderStyle="None" 
+                                                BorderStyle="None"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "declaration")) %>'></asp:Label>
                                         </ItemTemplate>
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="txtdeclaration" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
+                                            <%-- <asp:TextBox ID="txtdeclaration" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "declaration")) %>'>
-                                            </asp:TextBox>
+                                            </asp:TextBox>--%>
+                                            <asp:DropDownList ID="ddlDeclare" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;" CssClass="form-control form-control-sm">
+                                                <asp:ListItem Value="1" Text="Yes" />
+                                                <asp:ListItem Value="0" Text="No" />
+                                            </asp:DropDownList>
+
                                         </EditItemTemplate>
-                                        <HeaderStyle HorizontalAlign="Center"  />
-                                        <ItemStyle HorizontalAlign="left"  />
+                                        <HeaderStyle HorizontalAlign="Center" />
+                                        <ItemStyle HorizontalAlign="left" />
                                     </asp:TemplateField>
-                                     <asp:TemplateField HeaderText="Interest">
+                                    <asp:TemplateField HeaderText="Interest">
                                         <ItemTemplate>
                                             <asp:Label ID="lblinterest" runat="server" BackColor="Transparent" Width="100%"
-                                                BorderStyle="None" 
+                                                BorderStyle="None"
                                                 Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "interest")) %>'></asp:Label>
                                         </ItemTemplate>
                                         <EditItemTemplate>
-                                            <asp:TextBox ID="txtinterest" runat="server" Width="100%" Style="border-top-style: none; border-right-style: none; border-left-style: none; border-bottom-style: none; border-left-color: midnightblue; border-bottom-color: midnightblue; border-top-color: midnightblue; border-right-color: midnightblue;"
-                                                Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "interest")) %>'>
-                                            </asp:TextBox>
+                                            <asp:ListBox ID="ListBoxID" runat="server" SelectionMode="Multiple" CssClass="form-control form-control-sm">
+                                                <asp:ListItem Value="1">Football</asp:ListItem>
+                                                <asp:ListItem Value="0">Cricket</asp:ListItem>
+                                            </asp:ListBox>
+                                            <asp:Label ID="lblinteresthidden" runat="server" BackColor="Transparent" Width="100%" Visible="false"
+                                                BorderStyle="None"
+                                                Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "interest")) %>'></asp:Label>
                                         </EditItemTemplate>
-                                        <HeaderStyle HorizontalAlign="Center"  />
-                                        <ItemStyle HorizontalAlign="left"  />
+                                        <HeaderStyle HorizontalAlign="Center" />
+                                        <ItemStyle HorizontalAlign="left" />
+                                    </asp:TemplateField>
+
+
+                                    <asp:TemplateField HeaderText="Photo">
+                                        <ItemTemplate>
+                                            <a href='<%# If(String.IsNullOrEmpty(Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url"))), Me.ResolveUrl("/User_photo.png"), Me.ResolveUrl(Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")))) %>' target="_blank">
+                                                <asp:Image ID="photo_urlID" runat="server" CssClass="pop image img img-responsive img-thumbnail row" Height="40px" Width="50px"
+                                                    ImageUrl='<%# If(String.IsNullOrEmpty(Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url"))), "/User_photo.png", Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url"))) %>' />
+                                            </a>
+                                            <asp:Label ID="lblHiddenphoto_urlID" runat="server" ForeColor="Red" Visible="false" Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")) %>'></asp:Label>
+                                        </ItemTemplate>
+                                        <EditItemTemplate>
+                                            <asp:FileUpload ID="FileUpload1" runat="server" />
+                                            <asp:Label ID="ErrorMessageLabel" runat="server" ForeColor="Red" Visible="false"></asp:Label>
+                                            <asp:Label ID="Hiddenphoto_urlID" runat="server" ForeColor="Red" Visible="false" Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")) %>'></asp:Label>
+                                        </EditItemTemplate>
+                                        <HeaderStyle HorizontalAlign="Center" />
+                                        <ItemStyle HorizontalAlign="Center" />
                                     </asp:TemplateField>
 
                                     <asp:CommandField ShowDeleteButton="True" DeleteText="&lt;i class=&quot;fa fa-trash&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;" ControlStyle-Width="19px">
-                                        <HeaderStyle Font-Bold="True" HorizontalAlign="Center"  />
+                                        <HeaderStyle Font-Bold="True" HorizontalAlign="Center" />
                                         <ItemStyle Font-Bold="True" ForeColor="red" HorizontalAlign="Center" />
                                     </asp:CommandField>
 
 
                                 </Columns>
 
-                                
+
                             </asp:GridView>
                         </div>
                     </div>
                 </div>
             </div>
         </ContentTemplate>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="gvapplicant" />
+        </Triggers>
     </asp:UpdatePanel>
 </asp:Content>

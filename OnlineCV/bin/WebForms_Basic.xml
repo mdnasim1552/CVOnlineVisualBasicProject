@@ -64,6 +64,15 @@ Auto-generated field.
 To modify move field declaration from designer file to code-behind file.
 </remarks>
 </member>
+<member name="F:OnlineCV.About._ReportListBox">
+<summary>
+ReportListBox control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
 <member name="F:OnlineCV.About._gvapplicant">
 <summary>
 gvapplicant control.

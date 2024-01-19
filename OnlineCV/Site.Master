@@ -11,10 +11,14 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
     </asp:PlaceHolder>
+   <%-- <link href="Content/bootstrap-multiselect.css" rel="stylesheet" />--%>
+    <%--<link href="Content/chosen.css" rel="stylesheet" />--%>
     <link href="Content/mystyle.css" rel="stylesheet" />
     <webopt:BundleReference runat="server" Path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link href="Content/sumoselect.css" rel="stylesheet" />
+    <link href="Content/chosen.min.css" rel="stylesheet" />
 </head>
 <body>
     <form runat="server">
@@ -34,6 +38,8 @@
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
                 <%--Site Scripts--%>
+                <asp:ScriptReference  Path="~/Scripts/chosen.jquery.min.js"/>
+                <asp:ScriptReference  Path="~/Scripts/jquery.sumoselect.min.js"/>
             </Scripts>
         </asp:ScriptManager>
 
@@ -79,5 +85,6 @@
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/Scripts/bootstrap.js") %>
     </asp:PlaceHolder>
+
 </body>
 </html>
