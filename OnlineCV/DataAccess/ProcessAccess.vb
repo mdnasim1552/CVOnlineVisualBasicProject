@@ -134,6 +134,50 @@ Public Class ProcessAccess
     '    End If
     'End Function
 
+    Public Function ExecuteTransactionalOperation(SQLprocName As String, ParamArray parameters() As SqlParameter) As Boolean Implements IProcessAccess.ExecuteTransactionalOperation
+        Try
+            If TypeOf _dbConnection Is SqlConnection Then
+                Dim sqlConnection As SqlConnection = DirectCast(_dbConnection, SqlConnection)
+
+                If sqlConnection.State <> ConnectionState.Open Then
+                    sqlConnection.Open()
+                End If
+
+                Using transaction As SqlTransaction = sqlConnection.BeginTransaction()
+                    Using cmd As New SqlCommand()
+                        cmd.CommandText = SQLprocName
+                        cmd.CommandType = CommandType.StoredProcedure
+                        cmd.Parameters.AddRange(parameters)
+                        cmd.Connection = sqlConnection
+                        cmd.Transaction = transaction
+                        cmd.CommandTimeout = 120
+
+                        Try
+                            Dim affectedRows As Integer = cmd.ExecuteNonQuery()
+
+                            If affectedRows > 0 Then
+                                ' If execution was successful, commit the transaction
+                                transaction.Commit()
+                                Return True
+                            Else
+                                ' If no rows were affected, rollback the transaction
+                                transaction.Rollback()
+                                Return False
+                            End If
+                        Catch exp As Exception
+                            ' Handle exceptions
+                            transaction.Rollback()
+                            Return False
+                        End Try
+                    End Using
+                End Using
+            Else
+                Return False
+            End If
+        Catch ex As Exception
+            Return False
+        End Try
+    End Function
 
     Public Async Function ExecuteTransactionalOperationAsync(SQLprocName As String, ParamArray parameters() As SqlParameter) As Task(Of Boolean) Implements IProcessAccess.ExecuteTransactionalOperationAsync
         Try

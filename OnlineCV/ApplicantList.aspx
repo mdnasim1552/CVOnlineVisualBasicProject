@@ -14,10 +14,64 @@
             cursor: pointer;
         }
     </style>
+
     <script type="text/javascript">
+        function UploadFile(rowIndex) {
+            var empId = $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=lblapplicationid]').text().trim();
+            var imagepath = $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=Hiddenphoto_urlID]').text().trim();
+            //Hiddenphoto_urlID
+            var FileUpload1 = $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=FileUpload1]');
+            var file = FileUpload1[0].files;
+            var messageLbl = $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=ErrorMessageLabel]');
+            var imageurlforCodebehind = $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=Hiddenphoto_urlID]');
+            var formData = new FormData();
+            formData.append("empId", empId);
+            formData.append("imagepath", imagepath);
+            for (var i = 0; i < file.length; i++) {
+                formData.append(file[i].name, file[i]);
+            }
+            
+            $.ajax({
+                url: "Handler/UploadHandler.ashx",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    // Handle the server response here
+                    if (response == "Error") {
+                        messageLbl.text("Error: Invalid image type. Please upload a JPG, PNG, or GIF file.");
+                        messageLbl.css('color', 'red');
+                        FileUpload1.val('');
+                    } else {
+                        messageLbl.text("File uploaded successfully!");
+                        messageLbl.css('color', 'green');
+                        FileUpload1.val('');
+                        
+                       <%-- $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=Hiddenphoto_urlID]').val(response);
+                        $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=photo_urlID]').val(response);
+                        $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=aphoto_urlID]').val(response);--%>
 
+                        // Optionally, update the hidden label text
+                        //imageurlforCodebehind.text(response);
+                        $("#<%= HiddenField1.ClientID %>").val(response);
+                        
+                    }
+                   
+                    
+                    console.log(response);
+                },
+                error: function (error) {
+                    // Handle errors here
+                    messageLbl.text(error);
+                    messageLbl.css('color', 'red !important');
+                    console.log(error);
+                }
+            });
+            // Prevent the default postback behavior
+            return false;
+        }
         $(document).ready(function () {
-
             // Now you can perform operations on specificListBoxID
             // For example, applying the Multiselect plugin
             $('#<%= ReportListBox.ClientID%>').SumoSelect({
@@ -317,16 +371,17 @@
 
                                     <asp:TemplateField HeaderText="Photo">
                                         <ItemTemplate>
-                                            <a href='<%# If(String.IsNullOrEmpty(Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url"))), Me.ResolveUrl("/User_photo.png"), Me.ResolveUrl(Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")))) %>' target="_blank">
+                                            <a id="aphoto_urlID" href='<%# If(String.IsNullOrEmpty(Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url"))), Me.ResolveUrl("/User_photo.png"), Me.ResolveUrl(Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")))) %>' target="_blank">
                                                 <asp:Image ID="photo_urlID" runat="server" CssClass="pop image img img-responsive img-thumbnail row" Height="40px" Width="50px"
                                                     ImageUrl='<%# If(String.IsNullOrEmpty(Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url"))), "/User_photo.png", Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url"))) %>' />
                                             </a>
-                                            <asp:Label ID="lblHiddenphoto_urlID" runat="server" ForeColor="Red" Visible="false" Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")) %>'></asp:Label>
+                                            <asp:Label ID="lblHiddenphotoo_urlID" runat="server" ForeColor="Red" Style="display: none;" Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")) %>'></asp:Label>
                                         </ItemTemplate>
                                         <EditItemTemplate>
-                                            <asp:FileUpload ID="FileUpload1" runat="server" />
-                                            <asp:Label ID="ErrorMessageLabel" runat="server" ForeColor="Red" Visible="false"></asp:Label>
-                                            <asp:Label ID="Hiddenphoto_urlID" runat="server" ForeColor="Red" Visible="false" Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")) %>'></asp:Label>
+                                            <asp:FileUpload ID="FileUpload1" runat="server"/>
+                                            <asp:Button ID="UploadButton" runat="server" Text="Upload"  OnClientClick='<%# "return UploadFile(" + Convert.ToString(Container.DisplayIndex) + ");" %>' UseSubmitBehavior="false"></asp:Button>
+                                            <asp:Label ID="ErrorMessageLabel" runat="server" ForeColor="Red"></asp:Label>
+                                            <asp:Label ID="Hiddenphoto_urlID" runat="server" ForeColor="Red" Style="display: none;" Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")) %>' ClientIDMode="Static"></asp:Label>
                                         </EditItemTemplate>
                                         <HeaderStyle HorizontalAlign="Center" />
                                         <ItemStyle HorizontalAlign="Center" />
@@ -342,13 +397,14 @@
 
 
                             </asp:GridView>
+                            <asp:HiddenField ID="HiddenField1" runat="server" ClientIDMode="Static" />
                         </div>
                     </div>
                 </div>
             </div>
         </ContentTemplate>
-        <Triggers>
+       <%-- <Triggers>
             <asp:PostBackTrigger ControlID="gvapplicant" />
-        </Triggers>
+        </Triggers>--%>
     </asp:UpdatePanel>
 </asp:Content>
