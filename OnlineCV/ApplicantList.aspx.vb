@@ -31,7 +31,7 @@ Public Class About
             Dim gender As String = TryCast(gvrow.FindControl("lblgender"), Label).Text.Trim()
             Dim declaration As String = TryCast(gvrow.FindControl("lbldeclaration"), Label).Text.Trim()
             Dim interest As String = TryCast(gvrow.FindControl("lblinterest"), Label).Text.Trim()
-            Dim photoUrl As String = TryCast(gvrow.FindControl("lblHiddenphoto_urlID"), Label).Text.Trim()
+            Dim photoUrl As String = TryCast(gvrow.FindControl("lblHiddenphotoo_urlID"), Label).Text.Trim()
             Dim rowIndex As Integer = Me.gvapplicant.PageIndex * Me.gvapplicant.PageSize + gvrow.RowIndex
             dt.Rows(rowIndex)("fullname") = name
             dt.Rows(rowIndex)("email") = email
@@ -75,10 +75,6 @@ Public Class About
         Me.Data_Bind()
     End Sub
 
-    Protected Sub gvapplicant_RowDeleting(sender As Object, e As GridViewDeleteEventArgs)
-
-    End Sub
-
     Protected Sub gvapplicant_PageIndexChanging(sender As Object, e As GridViewPageEventArgs)
         Me.SaveValue()
         Me.gvapplicant.EditIndex = -1 ' No row Is In edit mode
@@ -108,6 +104,35 @@ Public Class About
         End If
         Return uniqueFileName
     End Function
+    Private Sub DeleteImage(imagepath As String)
+        If IO.File.Exists(Server.MapPath(imagepath)) Then
+            IO.File.Delete(Server.MapPath(imagepath))
+        End If
+    End Sub
+    Protected Async Sub gvapplicant_RowDeleting(sender As Object, e As GridViewDeleteEventArgs)
+        Dim dt As DataTable = DirectCast(ViewState("jobapplication"), DataTable)
+        Dim applicantid As String = DirectCast(Me.gvapplicant.Rows(e.RowIndex).FindControl("lblapplicationid"), Label).Text.Trim()
+        Dim Hphoto_urlID As String = TryCast(gvapplicant.Rows(e.RowIndex).FindControl("lblHiddenphoto_urlID"), Label).Text.Trim()
+
+        Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT02"
+
+        Dim jobCallType = "DELETEJOBAPPLICATION"
+        Dim jobparameters As SqlParameter() = New SqlParameter() {
+            New SqlParameter("@CallType", jobCallType),
+            New SqlParameter("@UserID", applicantid)
+        }
+        Dim result As Boolean = Await _processAccess.ExecuteTransactionalOperationAsync(procedureName, jobparameters)
+        If result Then
+            DeleteImage(Hphoto_urlID)
+            dt.Rows(Me.gvapplicant.PageIndex * Me.gvapplicant.PageSize + e.RowIndex).Delete()
+            dt.AcceptChanges()
+        End If
+
+        Me.gvapplicant.EditIndex = -1 ' No row Is In edit mode
+        Me.gvapplicant.SelectedIndex = -1 ' No row Is selected
+        ViewState("jobapplication") = dt
+        Me.Data_Bind()
+    End Sub
     Protected Sub gvapplicant_RowUpdating(sender As Object, e As GridViewUpdateEventArgs)
         Dim dt As DataTable = DirectCast(ViewState("jobapplication"), DataTable)
         Dim name As String = (TryCast(Me.gvapplicant.Rows(e.RowIndex).FindControl("txtname"), TextBox)).Text.Trim()
@@ -131,10 +156,11 @@ Public Class About
         Dim interestV As String = If(interestList.Count = 0, interestLbl, String.Join(", ", interestList))
 
 
-        Dim fileUpload As FileUpload = TryCast(gvapplicant.Rows(e.RowIndex).FindControl("FileUpload1"), FileUpload)
+        'Dim fileUpload As FileUpload = TryCast(gvapplicant.Rows(e.RowIndex).FindControl("FileUpload1"), FileUpload)
         Dim ErrorMessageLabel As Label = TryCast(gvapplicant.Rows(e.RowIndex).FindControl("ErrorMessageLabel"), Label)
-        Dim Hphoto_urlID As Label = TryCast(gvapplicant.Rows(e.RowIndex).FindControl("Hiddenphoto_urlID"), Label)
-        Dim photoUrl As String = Me.UploadUserImage(fileUpload, ErrorMessageLabel)
+        Dim Hphoto_urlID As String = TryCast(gvapplicant.Rows(e.RowIndex).FindControl("Hiddenphoto_urlID"), Label).Text.Trim()
+        'Dim photoUrl As String = Me.UploadUserImage(fileUpload, ErrorMessageLabel)
+        Dim photoUrl As String = Me.HiddenField1.Value
 
         Dim rowIndex As Integer = Me.gvapplicant.PageIndex * Me.gvapplicant.PageSize + e.RowIndex
         dt.Rows(rowIndex)("fullname") = name
@@ -145,11 +171,12 @@ Public Class About
         dt.Rows(rowIndex)("interest") = interestV
         dt.Rows(rowIndex)("gender") = gender
         dt.Rows(rowIndex)("region") = region
-        dt.Rows(rowIndex)("photo_url") = If(photoUrl = "", Hphoto_urlID.Text(), photoUrl)
+        dt.Rows(rowIndex)("photo_url") = If(photoUrl = "", Hphoto_urlID, photoUrl)
         dt.Rows(rowIndex)("declaration") = If(ddlDeclare = "1", "I have declared all the information are correct.", "N/A")
         ViewState("jobapplication") = dt
         Me.gvapplicant.EditIndex = -1 ' No row Is In edit mode
         Me.gvapplicant.SelectedIndex = -1 ' No row Is selected
+        Me.HiddenField1.Value = ""
         Me.Data_Bind()
     End Sub
 

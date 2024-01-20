@@ -17,7 +17,7 @@ Public Class _Default
         Dim uniqueFileName As String = String.Empty
         If (ImageUpload.HasFile) Then
             Dim allowedImageExtensions As String() = New String() {".jpg", ".jpeg", ".png", ".gif"}
-            Dim imageExtension = Path.GetExtension(ImageUpload.FileName)
+            Dim imageExtension = Path.GetExtension(ImageUpload.FileName).ToLower()
 
             If Not allowedImageExtensions.Contains(imageExtension) Then
                 ErrorMessageLabel.Text = "Invalid image type. Please upload a JPG, PNG, or GIF file."

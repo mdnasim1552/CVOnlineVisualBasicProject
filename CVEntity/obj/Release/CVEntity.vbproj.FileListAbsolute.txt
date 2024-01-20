@@ -1,0 +1,10 @@
+F:\Visual_Basic\OnlineCV\CVEntity\bin\Release\CVEntity.dll
+F:\Visual_Basic\OnlineCV\CVEntity\bin\Release\CVEntity.pdb
+F:\Visual_Basic\OnlineCV\CVEntity\bin\Release\CVEntity.xml
+F:\Visual_Basic\OnlineCV\CVEntity\obj\Release\CVEntity.vbproj.AssemblyReference.cache
+F:\Visual_Basic\OnlineCV\CVEntity\obj\Release\CVEntity.Resources.resources
+F:\Visual_Basic\OnlineCV\CVEntity\obj\Release\CVEntity.vbproj.GenerateResource.cache
+F:\Visual_Basic\OnlineCV\CVEntity\obj\Release\CVEntity.vbproj.CoreCompileInputs.cache
+F:\Visual_Basic\OnlineCV\CVEntity\obj\Release\CVEntity.dll
+F:\Visual_Basic\OnlineCV\CVEntity\obj\Release\CVEntity.xml
+F:\Visual_Basic\OnlineCV\CVEntity\obj\Release\CVEntity.pdb

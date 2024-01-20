@@ -82,6 +82,15 @@ Auto-generated field.
 To modify move field declaration from designer file to code-behind file.
 </remarks>
 </member>
+<member name="F:OnlineCV.About._HiddenField1">
+<summary>
+HiddenField1 control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
 <member name="F:OnlineCV._Default._UpdatePanel1">
 <summary>
 UpdatePanel1 control.
