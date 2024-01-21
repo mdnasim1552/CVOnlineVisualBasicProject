@@ -344,5 +344,56 @@ Public Class ProcessAccess
     End Function
 
 
+    Public Function GetTransactionalOperation(SQLprocName As String, ParamArray parameters() As SqlParameter) As String Implements IProcessAccess.GetTransactionalOperation
+        Try
+            If TypeOf _dbConnection Is SqlConnection Then
+                Dim sqlConnection As SqlConnection = DirectCast(_dbConnection, SqlConnection)
+
+                If sqlConnection.State <> ConnectionState.Open Then
+                    sqlConnection.Open()
+                End If
+
+                Using transaction As SqlTransaction = sqlConnection.BeginTransaction()
+                    Using cmd As New SqlCommand()
+                        cmd.CommandText = SQLprocName
+                        cmd.CommandType = CommandType.StoredProcedure
+                        cmd.Parameters.AddRange(parameters)
+                        Dim outputParameter As New SqlParameter("@PrimaryKey", SqlDbType.NVarChar, 50) With         'set -1 instead of 50 if need nvarchar(max)
+                        {
+                            .Direction = ParameterDirection.Output
+                        }
+                        cmd.Parameters.Add(outputParameter)
+                        cmd.Connection = sqlConnection
+                        cmd.Transaction = transaction
+                        cmd.CommandTimeout = 120
+
+                        Try
+                            ' Execute the stored procedure
+                            Dim primaryKey As Object = cmd.ExecuteScalar()
+
+                            If primaryKey IsNot Nothing AndAlso Not Convert.IsDBNull(primaryKey) Then
+                                ' If execution was successful and primary key is not null, commit the transaction
+                                transaction.Commit()
+                                Return primaryKey.ToString()
+                            Else
+                                ' If primary key is null or DBNull, rollback the transaction
+                                transaction.Rollback()
+                                Return Nothing
+                            End If
+                        Catch exp As Exception
+                            ' Handle exceptions
+                            transaction.Rollback()
+                            Return Nothing
+                        End Try
+                    End Using
+                End Using
+            Else
+                Return Nothing
+            End If
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
+
 
 End Class

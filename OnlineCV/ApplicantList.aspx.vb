@@ -2,7 +2,9 @@
 Imports System.Drawing
 Imports System.IO
 Imports System.Net.WebRequestMethods
+Imports CVEntity
 Imports Microsoft.Ajax.Utilities
+Imports Newtonsoft.Json
 
 Public Class About
     Inherits Page
@@ -88,22 +90,39 @@ Public Class About
         Me.gvapplicant.SelectedIndex = -1 ' No row Is selected
         Me.Data_Bind()
     End Sub
-    Private Function UploadUserImage(files As FileUpload, ErrorMessageLabel As Label) As String
+    Private Function UploadUserImage() As String
         Dim uniqueFileName As String = String.Empty
-        If (files.HasFile) Then
+        If (ImageUpload.HasFile) Then
             Dim allowedImageExtensions As String() = New String() {".jpg", ".jpeg", ".png", ".gif"}
-            Dim imageExtension = Path.GetExtension(files.FileName).ToLower()
+            Dim imageExtension = Path.GetExtension(ImageUpload.FileName).ToLower()
+
             If Not allowedImageExtensions.Contains(imageExtension) Then
                 ErrorMessageLabel.Text = "Invalid image type. Please upload a JPG, PNG, or GIF file."
                 ErrorMessageLabel.Visible = True
-                Return ""
+                Return Nothing
             End If
             uniqueFileName = Guid.NewGuid().ToString() + imageExtension
-            files.SaveAs(Server.MapPath("~/UserImage/" + uniqueFileName))
+            ImageUpload.SaveAs(Server.MapPath("~/UserImage/" + uniqueFileName))
             uniqueFileName = "~/UserImage/" + uniqueFileName 'this an url to return and save into DataBase
         End If
         Return uniqueFileName
     End Function
+    'Private Function UploadUserImage(files As FileUpload, ErrorMessageLabel As Label) As String
+    '    Dim uniqueFileName As String = String.Empty
+    '    If (files.HasFile) Then
+    '        Dim allowedImageExtensions As String() = New String() {".jpg", ".jpeg", ".png", ".gif"}
+    '        Dim imageExtension = Path.GetExtension(files.FileName).ToLower()
+    '        If Not allowedImageExtensions.Contains(imageExtension) Then
+    '            ErrorMessageLabel.Text = "Invalid image type. Please upload a JPG, PNG, or GIF file."
+    '            ErrorMessageLabel.Visible = True
+    '            Return ""
+    '        End If
+    '        uniqueFileName = Guid.NewGuid().ToString() + imageExtension
+    '        files.SaveAs(Server.MapPath("~/UserImage/" + uniqueFileName))
+    '        uniqueFileName = "~/UserImage/" + uniqueFileName 'this an url to return and save into DataBase
+    '    End If
+    '    Return uniqueFileName
+    'End Function
     Private Sub DeleteImage(imagepath As String)
         If IO.File.Exists(Server.MapPath(imagepath)) Then
             IO.File.Delete(Server.MapPath(imagepath))
@@ -112,7 +131,7 @@ Public Class About
     Protected Async Sub gvapplicant_RowDeleting(sender As Object, e As GridViewDeleteEventArgs)
         Dim dt As DataTable = DirectCast(ViewState("jobapplication"), DataTable)
         Dim applicantid As String = DirectCast(Me.gvapplicant.Rows(e.RowIndex).FindControl("lblapplicationid"), Label).Text.Trim()
-        Dim Hphoto_urlID As String = TryCast(gvapplicant.Rows(e.RowIndex).FindControl("lblHiddenphoto_urlID"), Label).Text.Trim()
+        Dim Hphoto_urlID As String = TryCast(gvapplicant.Rows(e.RowIndex).FindControl("lblHiddenphotoo_urlID"), Label).Text.Trim()
 
         Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT02"
 
@@ -184,5 +203,56 @@ Public Class About
         Me.gvapplicant.EditIndex = -1 ' No row Is In edit mode
         Me.gvapplicant.SelectedIndex = -1 ' No row Is selected
         Me.Data_Bind()
+    End Sub
+
+    Protected Sub btnsave_Click(sender As Object, e As EventArgs)
+        Dim myTableData = New List(Of EducationalQualification)
+        Dim jsonData = MyData.Value
+        myTableData = JsonConvert.DeserializeObject(Of List(Of EducationalQualification))(jsonData)
+        Dim photoUrl As String = Me.UploadUserImage()
+        Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT"
+
+        Dim jobCallType = "InsertjobapplicationRecord"
+        Dim jobparameters As SqlParameter() = New SqlParameter() {
+            New SqlParameter("@CallType", jobCallType),
+            New SqlParameter("@Desc1", fullName.Text),
+            New SqlParameter("@Desc2", txtfname.Text),
+            New SqlParameter("@Desc3", txtemail.Text),
+            New SqlParameter("@Desc4", txtcell.Text),
+            New SqlParameter("@Desc5", txtaddress.Text),
+            New SqlParameter("@Desc6", txtgender.SelectedValue),
+            New SqlParameter("@Desc7", txtregion.SelectedValue),
+            New SqlParameter("@Desc8", If(declareCheckbox.Checked, "I have declared all the information are correct.", "N/A")),
+            New SqlParameter("@Desc9", If(FootballCheckbox.Checked, "Football,", "") & If(CricketCheckbox.Checked, "Cricket", "")),
+            New SqlParameter("@Desc10", photoUrl)
+        }
+        Dim primayKey As String = _processAccess.GetTransactionalOperation(procedureName, jobparameters)
+
+        Dim CallType = "InsertEducational_QualificationRecord"
+        For Each row As EducationalQualification In myTableData
+            Dim eduparameters As SqlParameter() = New SqlParameter() {
+                New SqlParameter("@CallType", CallType),
+                New SqlParameter("@Desc1", row.exam),
+                New SqlParameter("@Desc2", row.board),
+                New SqlParameter("@Desc3", row.year),
+                New SqlParameter("@Desc4", row.result),
+                New SqlParameter("@Desc5", primayKey)
+            }
+            Dim result As String = _processAccess.GetTransactionalOperation(procedureName, eduparameters)
+            If result Is Nothing Then
+                Return
+            End If
+        Next
+        fullName.Text = ""
+        txtfname.Text = ""
+        txtemail.Text = ""
+        txtcell.Text = ""
+        txtaddress.Text = ""
+        txtgender.ClearSelection()
+        declareCheckbox.Checked = False
+        FootballCheckbox.Checked = False
+        CricketCheckbox.Checked = False
+        ScriptManager.RegisterStartupScript(Me, Me.GetType(), "alert", "closeUserModal();", True)
+        Me.GetApplicantList()
     End Sub
 End Class

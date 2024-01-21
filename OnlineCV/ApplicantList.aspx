@@ -16,6 +16,20 @@
     </style>
 
     <script type="text/javascript">
+        var i = 1;
+        function openUserModal() {
+            /* $('#modalAddUser').modal('hide');*/
+            $('.modal-backdrop').remove();
+            $('#modalAddUser').modal('toggle', {
+                backdrop: 'static',
+                keyboard: false
+            });
+        }
+        function closeUserModal() {
+            $('.modal-backdrop').remove();
+            $('#modalAddUser').modal('hide');
+        }
+
         function UploadFile(rowIndex) {
             var empId = $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=lblapplicationid]').text().trim();
             var imagepath = $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=Hiddenphoto_urlID]').text().trim();
@@ -30,7 +44,7 @@
             for (var i = 0; i < file.length; i++) {
                 formData.append(file[i].name, file[i]);
             }
-            
+
             $.ajax({
                 url: "Handler/UploadHandler.ashx",
                 type: "POST",
@@ -47,7 +61,7 @@
                         messageLbl.text("File uploaded successfully!");
                         messageLbl.css('color', 'green');
                         FileUpload1.val('');
-                        
+
                        <%-- $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=Hiddenphoto_urlID]').val(response);
                         $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=photo_urlID]').val(response);
                         $('#<%= gvapplicant.ClientID %> tr').eq(rowIndex + 1).find('[id*=aphoto_urlID]').val(response);--%>
@@ -55,10 +69,10 @@
                         // Optionally, update the hidden label text
                         //imageurlforCodebehind.text(response);
                         $("#<%= HiddenField1.ClientID %>").val(response);
-                        
+
                     }
-                   
-                    
+
+
                     console.log(response);
                 },
                 error: function (error) {
@@ -71,6 +85,10 @@
             // Prevent the default postback behavior
             return false;
         }
+        $('#btnsave').click(function (e) {
+            e.preventDefault(); // Prevent the default form submission
+            location.reload(true);
+        });
         $(document).ready(function () {
             // Now you can perform operations on specificListBoxID
             // For example, applying the Multiselect plugin
@@ -94,15 +112,33 @@
 
         });
         function pageLoaded() {
-
-            $('#<%= ReportListBox.ClientID%>').SumoSelect({
-                placeholder: 'Select Here',
-                search: true,
-                searchText: 'Enter here.',
-                selectAll: true,
-                okCancelInMulti: true
+            $('#add').click(function () {
+                //alert('ok');
+                i++;
+                $('#dynamicadd').append('<tr id="row' + i + '"><td><input type="text" name="exam[]" id = "exam" class= "form-control" ></td ><td><input type="text" name="board[]" id="board" class="form-control"></td><td><input type="text" name="year[]" id="year" class="form-control"></td><td><input type="text" name="result[]" id="result" class="form-control"></td><td><button type="button" id="' + i + '" class="btn btn-danger remove_row form-control">-</button></td></tr > ');
             });
+            $(document).on('click', '.remove_row', function () {
+                var row_id = $(this).attr("id");
+                $('#row' + row_id + '').remove();
+                i--;
+            });
+            var myTableData = [];
 
+            $("#btnsave").click(function () {
+                $('#dynamicadd tr').each(function (row) {
+                    //console.log('Hello');
+                    myTableData[row] = {
+                        "Exam": $(this).find('input[name="exam[]"]').val(),
+                        "Board": $(this).find('input[name="board[]"]').val(),
+                        "Year": $(this).find('input[name="year[]"]').val(),
+                        "Result": $(this).find('input[name="result[]"]').val()
+
+                    }
+                });
+                console.log(myTableData);
+                var jsonData = JSON.stringify(myTableData);
+                $("#<%= MyData.ClientID %>").val(jsonData);
+            });
             $('[id*=ListBoxID]').SumoSelect({
                 placeholder: 'Select Here',
                 search: true,
@@ -110,7 +146,6 @@
                 selectAll: true,
                 okCancelInMulti: true
             });
-            $('.chzn-select').chosen({ search_contains: true });
         }
     </script>
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
@@ -125,9 +160,14 @@
                 </div>
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-2">
+                        <div class="col-md-11" style="margin-top: 21px;">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddUser">
+                                Add
+                            </button>
+                        </div>
+                        <div class="col-md-1">
                             <asp:Label ID="page_Id" runat="server" CssClass="form-label" Text="Page Size"></asp:Label>
-                            <asp:DropDownList ID="ddlpagesize" runat="server" AutoPostBack="True" CssClass="form-control form-control-sm"
+                            <asp:DropDownList ID="ddlpagesize" runat="server" AutoPostBack="True" CssClass="form-control"
                                 OnSelectedIndexChanged="ddlpagesize_SelectedIndexChanged">
                                 <asp:ListItem>10</asp:ListItem>
                                 <asp:ListItem>20</asp:ListItem>
@@ -144,8 +184,8 @@
                                 <asp:ListItem>3000</asp:ListItem>
                             </asp:DropDownList>
                         </div>
-                        <div class="col-md-4">
-                            <asp:ListBox ID="ReportListBox" runat="server" CssClass="form-control form-control-sm" SelectionMode="Multiple">
+                        <div class="col-md-4" style="display: none;">
+                            <asp:ListBox ID="ReportListBox" runat="server" CssClass="form-control" SelectionMode="Multiple">
                                 <asp:ListItem Value="1">Appointment Letter</asp:ListItem>
                                 <asp:ListItem Value="0">Application Form</asp:ListItem>
                                 <asp:ListItem Value="8">Age Form</asp:ListItem>
@@ -378,8 +418,8 @@
                                             <asp:Label ID="lblHiddenphotoo_urlID" runat="server" ForeColor="Red" Style="display: none;" Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")) %>'></asp:Label>
                                         </ItemTemplate>
                                         <EditItemTemplate>
-                                            <asp:FileUpload ID="FileUpload1" runat="server"/>
-                                            <asp:Button ID="UploadButton" runat="server" Text="Upload"  OnClientClick='<%# "return UploadFile(" + Convert.ToString(Container.DisplayIndex) + ");" %>' UseSubmitBehavior="false"></asp:Button>
+                                            <asp:FileUpload ID="FileUpload1" runat="server" />
+                                            <asp:Button ID="UploadButton" runat="server" Text="Upload" OnClientClick='<%# "return UploadFile(" + Convert.ToString(Container.DisplayIndex) + ");" %>' UseSubmitBehavior="false"></asp:Button>
                                             <asp:Label ID="ErrorMessageLabel" runat="server" ForeColor="Red"></asp:Label>
                                             <asp:Label ID="Hiddenphoto_urlID" runat="server" ForeColor="Red" Style="display: none;" Text='<%# Convert.ToString(DataBinder.Eval(Container.DataItem, "photo_url")) %>' ClientIDMode="Static"></asp:Label>
                                         </EditItemTemplate>
@@ -402,9 +442,151 @@
                     </div>
                 </div>
             </div>
+
+
+            <div id="modalAddUser" class="modal animated slideInLeft " role="dialog" data-keyboard="false" data-backdrop="static">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"><span class="fa fa-table"></span>&nbsp;Job Application</h5>
+                            <button id="closebtnID" type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i></button>
+                        </div>
+                        <div class="modal-body form-horizontal">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <asp:Label runat="server" AssociatedControlID="fullName"><b>Full Name</b></asp:Label><br />
+                                    <asp:TextBox runat="server" required="required" Enabled="True" name="BrandName" ID="fullName" CssClass="form-control input-sm" placeholder="Full Name"></asp:TextBox>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <asp:Label runat="server" AssociatedControlID="txtfname"><b>Father Name</b></asp:Label><br />
+                                    <asp:TextBox runat="server" required="required" Enabled="True" name="BrandName" ID="txtfname" CssClass="form-control input-sm" placeholder="Father Name"></asp:TextBox>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <asp:Label runat="server" AssociatedControlID="txtregion"><b>Region</b></asp:Label><br />
+                                    <asp:DropDownList ID="txtregion" CssClass="form-control input-sm" runat="server">
+                                        <asp:ListItem Text="Pakistan" />
+                                        <asp:ListItem Text="Iran" />
+                                        <asp:ListItem Text="Iraq" />
+                                        <asp:ListItem Text="Turkey" />
+                                        <asp:ListItem Text="India" />
+                                        <asp:ListItem Text="China" />
+                                    </asp:DropDownList>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <asp:Label runat="server" AssociatedControlID="txtaddress"><b>Address</b></asp:Label><br />
+                                    <asp:TextBox runat="server" required="required" Enabled="True" name="BrandName" ID="txtaddress" CssClass="form-control input-sm" placeholder=" Address "></asp:TextBox>
+                                    <%-- <textarea Enabled="True" ID="txtaddress" cols="20" rows="2" class="form-control input-sm" placeholder=" Address "></textarea>--%>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <asp:Label runat="server" AssociatedControlID="txtcell"><b>Mobile Number</b></asp:Label><br />
+                                    <asp:TextBox runat="server" required="required" TextMode="Number" Enabled="True" name="BrandName" ID="txtcell" CssClass="form-control input-sm" placeholder="Mobile Number"></asp:TextBox>
+
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <asp:Label runat="server" AssociatedControlID="txtemail"><b>Email</b></asp:Label><br />
+                                    <asp:TextBox runat="server" required="required" TextMode="Email" Enabled="True" name="BrandName" ID="txtemail" CssClass="form-control input-sm" placeholder="Email"></asp:TextBox>
+
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <asp:Label runat="server"><b>Interest:</b></asp:Label>
+                                        <asp:Label runat="server" AssociatedControlID="FootballCheckbox"><b>Football</b></asp:Label>
+                                        <asp:CheckBox ID="FootballCheckbox" runat="server" />
+                                        <asp:Label runat="server" AssociatedControlID="CricketCheckbox"><b>Cricket</b></asp:Label>
+                                        <asp:CheckBox ID="CricketCheckbox" runat="server" />
+                                    </div>
+                                    <div class="mb-3">
+                                        <asp:Label runat="server" AssociatedControlID="ImageUpload"><b>Upload your photo</b></asp:Label>
+                                        <asp:FileUpload ID="ImageUpload" runat="server" />
+                                        <asp:Label ID="ErrorMessageLabel" runat="server" ForeColor="Red" Visible="false"></asp:Label>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <asp:Label runat="server" AssociatedControlID="txtgender"><b>Gender</b></asp:Label><br />
+                                    <asp:RadioButtonList CssClass="form-group" ID="txtgender" runat="server">
+                                        <asp:ListItem Text="Male" />
+                                        <asp:ListItem Text="Female" />
+                                    </asp:RadioButtonList>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <table class="table table-bordered myTable">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Exam</th>
+                                                <th scope="col">Board</th>
+                                                <th scope="col">Year</th>
+                                                <th scope="col">Result</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dynamicadd">
+                                            <tr>
+                                                <td>
+                                                    <input type="text" name="exam[]" id="exam" class="form-control"></td>
+                                                <td>
+                                                    <input type="text" name="board[]" id="board" class="form-control"></td>
+                                                <td>
+                                                    <input type="text" name="year[]" id="year" class="form-control"></td>
+                                                <td>
+                                                    <input type="text" name="result[]" id="result" class="form-control"></td>
+                                                <td>
+                                                    <button type="button" id="add" class=" form-control btn btn-success">+</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                            <asp:HiddenField ID="MyData" runat="server" ClientIDMode="Static" />
+
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <asp:CheckBox ID="declareCheckbox" runat="server" />
+                                    <asp:Label runat="server" AssociatedControlID="declareCheckbox"><b>I have declared all the information are correct.</b></asp:Label>
+                                    <%--<asp:TextBox runat="server" required="required" TextMode="Number" Enabled="True" name="BrandName" ID="TextBox1" class="form-control input-sm" placeholder="Mobile Number"></asp:TextBox>--%>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <%--<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>--%>
+                            <asp:Button Text="Save" ID="btnsave" ClientIDMode="Static" CssClass="btn btn-secondary" Width="220px" runat="server" OnClick="btnsave_Click" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </ContentTemplate>
-       <%-- <Triggers>
-            <asp:PostBackTrigger ControlID="gvapplicant" />
-        </Triggers>--%>
+        <Triggers>
+            <asp:PostBackTrigger ControlID="btnsave" />
+        </Triggers>
     </asp:UpdatePanel>
+    <script>
+        $(function () {
+            $('#closebtnID').click(function () {
+                if ($('#dynamicadd tr').length > 1) {
+                    // Remove all rows except the first one
+                    i = 1;
+                    $('#dynamicadd tr:gt(0)').remove();
+                }
+            });
+        });
+    </script>
 </asp:Content>
