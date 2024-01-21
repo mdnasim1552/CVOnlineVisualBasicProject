@@ -66,4 +66,130 @@ Partial Public Class About
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
     Protected WithEvents HiddenField1 As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''fullName control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents fullName As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtfname control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtfname As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtregion control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtregion As Global.System.Web.UI.WebControls.DropDownList
+
+    '''<summary>
+    '''txtaddress control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtaddress As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtcell control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtcell As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''txtemail control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtemail As Global.System.Web.UI.WebControls.TextBox
+
+    '''<summary>
+    '''FootballCheckbox control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents FootballCheckbox As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
+    '''CricketCheckbox control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents CricketCheckbox As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
+    '''ImageUpload control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ImageUpload As Global.System.Web.UI.WebControls.FileUpload
+
+    '''<summary>
+    '''ErrorMessageLabel control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents ErrorMessageLabel As Global.System.Web.UI.WebControls.Label
+
+    '''<summary>
+    '''txtgender control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents txtgender As Global.System.Web.UI.WebControls.RadioButtonList
+
+    '''<summary>
+    '''MyData control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents MyData As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
+    '''declareCheckbox control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents declareCheckbox As Global.System.Web.UI.WebControls.CheckBox
+
+    '''<summary>
+    '''btnsave control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents btnsave As Global.System.Web.UI.WebControls.Button
 End Class

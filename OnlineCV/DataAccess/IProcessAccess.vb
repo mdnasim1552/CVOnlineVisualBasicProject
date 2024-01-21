@@ -9,5 +9,6 @@ Public Interface IProcessAccess
     Function ExecuteTransactionalOperationAsync(SQLprocName As String, ParamArray parameters As SqlParameter()) As Task(Of Boolean)
     Function ExecuteTransactionalOperation(SQLprocName As String, ParamArray parameters As SqlParameter()) As Boolean
     Function GetTransactionalOperationAsync(SQLprocName As String, ParamArray parameters() As SqlParameter) As Task(Of String)
+    Function GetTransactionalOperation(SQLprocName As String, ParamArray parameters() As SqlParameter) As String
     Function GetDataSetsAsync(SQLprocName As String, ParamArray parameters As SqlParameter()) As Task(Of DataSet)
 End Interface
