@@ -2,10 +2,17 @@
 Imports System.Drawing
 Imports System.IO
 Imports System.Net.WebRequestMethods
+Imports System.Reflection
 Imports CVEntity
 Imports Microsoft.Ajax.Utilities
 Imports Newtonsoft.Json
-
+Imports CVLibrary
+Imports WebGrease.Css
+Imports System.Runtime.Remoting.Metadata.W3cXsd2001
+Imports System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel
+Imports System.Security.Policy
+Imports Microsoft.Reporting.WinForms
+Imports RDLCReport
 Public Class About
     Inherits Page
     Private _processAccess As IProcessAccess = New ProcessAccess()
@@ -47,10 +54,28 @@ Public Class About
         Next
         ViewState("jobapplication") = dt
     End Sub
-    Private Sub lbtnUpdate_Click(sender As Object, e As EventArgs)
+    Private Async Sub lbtnUpdate_Click(sender As Object, e As EventArgs)
         Me.SaveValue()
+        Dim dt As DataTable = DirectCast(ViewState("jobapplication"), DataTable)
+        Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT02"
+        Dim CallType = "UPDATEMPLOYEEINFO"
 
-        ScriptManager.RegisterStartupScript(Me, Me.GetType(), "CallMyFunction", "showContent('Updated successfully');", True)
+        Dim tvpParam As New SqlParameter("@jobapplicationTypes", dt)
+        tvpParam.SqlDbType = SqlDbType.Structured
+        tvpParam.TypeName = "dbo.jobapplicationType"
+
+        Dim parameters As SqlParameter() = New SqlParameter() {
+        New SqlParameter("@CallType", CallType),
+        tvpParam
+        }
+        Dim result As Boolean = Await _processAccess.ExecuteTransactionalOperationAsync(procedureName, parameters)
+        If result = True Then
+            ScriptManager.RegisterStartupScript(Me, Me.GetType(), "CallMyFunction", "showContent('Updated successfully');", True)
+        Else
+            ScriptManager.RegisterStartupScript(Me, Me.GetType(), "CallMyFunction", "showContentFail('Updated Fail');", True)
+        End If
+
+        Me.GetApplicantList()
     End Sub
 
     Private Sub Data_Bind()
@@ -255,4 +280,39 @@ Public Class About
         ScriptManager.RegisterStartupScript(Me, Me.GetType(), "alert", "closeUserModal();", True)
         Me.GetApplicantList()
     End Sub
+
+    Protected Sub printid_Click(sender As Object, e As EventArgs)
+
+        Dim RowIndex As Integer = DirectCast(DirectCast(sender, LinkButton).NamingContainer, GridViewRow).RowIndex
+        Dim applicantid As String = TryCast(Me.gvapplicant.Rows(RowIndex).FindControl("lblapplicationid"), Label).Text.Trim()
+        Dim jobDt As DataTable = DirectCast(ViewState("jobapplication"), DataTable)
+        Dim dv As DataView = jobDt.DefaultView
+        dv.RowFilter = "id='" + applicantid + "'"
+        jobDt = dv.ToTable()
+
+        Dim eduDt As DataTable = DirectCast(ViewState("educational_qualification"), DataTable)
+        Dim dv2 As DataView = eduDt.AsDataView
+        dv2.RowFilter = "jobapplication_id='" + applicantid + "'"
+        eduDt = dv2.ToTable
+        Dim obj As DataTableToList = New DataTableToList()
+        Dim jobList As List(Of Employee) = obj.ConvertDataTableToList(Of Employee)(jobDt)
+        Dim eduDtList As List(Of EducationalQualification) = obj.ConvertDataTableToList(Of EducationalQualification)(eduDt)
+        Dim imagepath As String = New Uri(Server.MapPath(jobDt.Rows(0)("photo_url"))).AbsoluteUri 'jobDt.Rows(0)("photo_url")'new Uri(Server.MapPath(@"~\Image\LOGO" + comcod + ".jpg")).AbsoluteUri;
+        Dim robj As RPTPathClass = New RPTPathClass()
+        Dim Rpt1 As New LocalReport()
+        Rpt1.LoadReportDefinition(robj.GetReportFilePath("EmployeeCV"))
+        Rpt1 = robj.SetRDLCReportDatasetss(Rpt1, New Dictionary(Of String, Object) From {{"DataSet1", jobList}, {"DataSet2", eduDtList}})
+        Rpt1.EnableExternalImages = True
+
+        Rpt1.SetParameters(New ReportParameter("title", "CURRICULUM VITAE"))
+        Rpt1.SetParameters(New ReportParameter("imagepath", imagepath))
+        Session("Report1") = Rpt1
+        'String Url = "RDLC_report_demo_2.aspx?ID=" + ID;
+        Dim url As String = "RDLCViewerWin.aspx?PrintOpt=PDF"
+        Dim Script As String = "window.open('" + url + "', '_blank');"
+        ScriptManager.RegisterStartupScript(Me, Me.GetType(), "OpenWindow", Script, True)
+
+
+    End Sub
+
 End Class

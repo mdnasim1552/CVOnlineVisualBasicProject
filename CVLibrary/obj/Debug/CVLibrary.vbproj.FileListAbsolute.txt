@@ -1,0 +1,10 @@
+F:\Visual_Basic\OnlineCV\CVLibrary\bin\Debug\CVLibrary.dll
+F:\Visual_Basic\OnlineCV\CVLibrary\bin\Debug\CVLibrary.pdb
+F:\Visual_Basic\OnlineCV\CVLibrary\bin\Debug\CVLibrary.xml
+F:\Visual_Basic\OnlineCV\CVLibrary\obj\Debug\CVLibrary.vbproj.AssemblyReference.cache
+F:\Visual_Basic\OnlineCV\CVLibrary\obj\Debug\CVLibrary.Resources.resources
+F:\Visual_Basic\OnlineCV\CVLibrary\obj\Debug\CVLibrary.vbproj.GenerateResource.cache
+F:\Visual_Basic\OnlineCV\CVLibrary\obj\Debug\CVLibrary.vbproj.CoreCompileInputs.cache
+F:\Visual_Basic\OnlineCV\CVLibrary\obj\Debug\CVLibrary.dll
+F:\Visual_Basic\OnlineCV\CVLibrary\obj\Debug\CVLibrary.xml
+F:\Visual_Basic\OnlineCV\CVLibrary\obj\Debug\CVLibrary.pdb

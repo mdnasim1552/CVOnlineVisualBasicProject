@@ -162,7 +162,7 @@
                     <div class="row">
                         <div class="col-md-11" style="margin-top: 21px;">
                             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddUser">
-                                Add
+                                <i class="bi bi-plus fw-bold" ></i>
                             </button>
                         </div>
                         <div class="col-md-1">
@@ -230,12 +230,19 @@
                                         <HeaderStyle HorizontalAlign="center" />
                                         <ItemStyle HorizontalAlign="center" />
                                     </asp:TemplateField>
-                                    <asp:CommandField DeleteText="" HeaderText="Edit" InsertText="" NewText=""
+                                    <asp:CommandField DeleteText="" HeaderText="Edit" InsertText="" NewText="" 
                                         SelectText="" ShowEditButton="True" EditText="&lt;i class=&quot;fa fa-edit&quot; aria-hidden=&quot;true&quot;&gt;&lt;/i&gt;">
                                         <HeaderStyle HorizontalAlign="center" />
-                                        <ItemStyle ForeColor="#0000C0" HorizontalAlign="center" />
+                                        <ItemStyle ForeColor="#0000C0" HorizontalAlign="center"  />
                                     </asp:CommandField>
+                                    <asp:TemplateField HeaderText="Print">
 
+                                        <ItemTemplate>
+                                            <asp:LinkButton OnClick="printid_Click" ForeColor="Blue" ID="printid" runat="server" ><span class=" fa fa-print"></span></asp:LinkButton>
+                                        </ItemTemplate>
+                                        <HeaderStyle HorizontalAlign="Center" />
+                                        <ItemStyle HorizontalAlign="Center" />
+                                    </asp:TemplateField>
 
 
                                     <asp:TemplateField HeaderText="Application_ID">
