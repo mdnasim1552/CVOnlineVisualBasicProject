@@ -11,7 +11,34 @@ Public Class ProcessAccess
         _connectionstring = ConfigurationManager.ConnectionStrings("myConnectionString").ConnectionString
         _dbConnection = New SqlConnection(_connectionstring)
     End Sub
+    Public Function GetDataSets(SQLprocName As String, ParamArray parameters As SqlParameter()) As DataSet Implements IProcessAccess.GetDataSets
+        Try
+            If TypeOf _dbConnection Is SqlConnection Then
+                Dim sqlConnection As SqlConnection = DirectCast(_dbConnection, SqlConnection)
 
+                If _dbConnection.State <> ConnectionState.Open Then
+                    sqlConnection.Open()
+                End If
+
+                Using cmd As New SqlCommand(), adp As New SqlDataAdapter()
+                    cmd.CommandText = SQLprocName
+                    cmd.CommandType = CommandType.StoredProcedure
+                    cmd.Parameters.AddRange(parameters)
+                    cmd.Connection = sqlConnection
+                    cmd.CommandTimeout = 120
+                    adp.SelectCommand = cmd
+
+                    Dim ds As New DataSet()
+                    adp.Fill(ds)
+                    Return ds
+                End Using
+            Else
+                Return Nothing
+            End If
+        Catch exp As Exception
+            Return Nothing
+        End Try
+    End Function
     Public Async Function GetDataSetsAsync(SQLprocName As String, ParamArray parameters As SqlParameter()) As Task(Of DataSet) Implements IProcessAccess.GetDataSetsAsync
         Try
             If TypeOf _dbConnection Is SqlConnection Then

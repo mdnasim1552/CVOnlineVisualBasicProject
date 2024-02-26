@@ -53,6 +53,15 @@ OnlineCV
   resource lookups using this strongly typed resource class.
 </summary>
 </member>
+<member name="F:OnlineCV.ApplicantAjax._UpdatePanel1">
+<summary>
+UpdatePanel1 control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
 <member name="F:OnlineCV.About._UpdatePanel1">
 <summary>
 UpdatePanel1 control.
@@ -227,6 +236,15 @@ To modify move field declaration from designer file to code-behind file.
 <member name="F:OnlineCV.About._btnsave">
 <summary>
 btnsave control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.Contact._UpdatePanel1">
+<summary>
+UpdatePanel1 control.
 </summary>
 <remarks>
 Auto-generated field.
