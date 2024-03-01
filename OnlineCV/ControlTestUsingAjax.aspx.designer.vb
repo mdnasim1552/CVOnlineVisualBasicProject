@@ -11,32 +11,23 @@ Option Strict On
 Option Explicit On
 
 
-Partial Public Class ApplicantAjax
+Partial Public Class ControlTestUsingAjax
 
     '''<summary>
-    '''UpdatePanel1 control.
+    '''loadControlButton control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents UpdatePanel1 As Global.System.Web.UI.UpdatePanel
+    Protected WithEvents loadControlButton As Global.System.Web.UI.WebControls.Button
 
     '''<summary>
-    '''ImageUpload control.
+    '''sortable control.
     '''</summary>
     '''<remarks>
     '''Auto-generated field.
     '''To modify move field declaration from designer file to code-behind file.
     '''</remarks>
-    Protected WithEvents ImageUpload As Global.System.Web.UI.WebControls.FileUpload
-
-    '''<summary>
-    '''ErrorMessageLabel control.
-    '''</summary>
-    '''<remarks>
-    '''Auto-generated field.
-    '''To modify move field declaration from designer file to code-behind file.
-    '''</remarks>
-    Protected WithEvents ErrorMessageLabel As Global.System.Web.UI.WebControls.Label
+    Protected WithEvents sortable As Global.System.Web.UI.HtmlControls.HtmlGenericControl
 End Class
