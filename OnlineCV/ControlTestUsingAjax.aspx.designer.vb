@@ -14,6 +14,15 @@ Option Explicit On
 Partial Public Class ControlTestUsingAjax
 
     '''<summary>
+    '''HiddenLabelText control.
+    '''</summary>
+    '''<remarks>
+    '''Auto-generated field.
+    '''To modify move field declaration from designer file to code-behind file.
+    '''</remarks>
+    Protected WithEvents HiddenLabelText As Global.System.Web.UI.WebControls.HiddenField
+
+    '''<summary>
     '''loadControlButton control.
     '''</summary>
     '''<remarks>
