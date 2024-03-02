@@ -14,6 +14,7 @@ Public Class ApplicantControl
         If Not IsPostBack Then
             Me.GetApplicantList()
         End If
+        Me.GetApplicantList()
     End Sub
 
     Private Sub SaveValue()

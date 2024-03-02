@@ -5,15 +5,21 @@
         <!-- Placeholder for dynamically loaded ApplicantControl -->
     </div>
 
-
-
+    <asp:HiddenField ID="HiddenLabelText" runat="server" />
     <%-- <button id="loadControlButton">Load Control</button>--%>
-    <asp:Button ID="loadControlButton" runat="server" Text="Load Control" OnClick="loadControlButton_Click" />
+    <asp:Button ID="loadControlButton" runat="server" Text="Load Control" OnClick="loadControlButton_Click"  OnClientClick="setLabelText(); return true;" formnovalidate />
     <div runat="server" id="sortable" visible="false">
         <!-- Placeholder for dynamically loaded control -->
     </div>
 
     <script type="text/javascript">
+        $(document).ready(function () {
+            // Define click event handler for the load control button           
+           
+        });
+        function setLabelText() {
+            $("#<%= HiddenLabelText.ClientID %>").val('nasim');
+         }
         //$(document).ready(function () {
         //    // Define click event handler for the load control button
         //    $('#loadControlButton').click(function () {
