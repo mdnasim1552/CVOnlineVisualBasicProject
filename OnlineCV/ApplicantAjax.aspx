@@ -17,6 +17,28 @@
         function closeUserModal() {
             $('.modal-backdrop').remove();
             $('#modalAddUser').modal('hide');
+            clearModal();
+        }
+        function clearModal() {
+            $('#fullName').val("");
+            $('#txtfname').val("");
+            $('#txtaddress').val("");
+            $('#txtcell').val("");
+            $('#txtemail').val("");
+            $('#male').prop('checked', false);
+            $('#female').prop('checked', false);
+            $('#txtregion').val(0);
+            $('#FootballCheckbox').prop('checked', false);
+            $('#CricketCheckbox').prop('checked', false);
+            $('#declareCheckbox').prop('checked', false);
+
+            $('#uploadedImage').attr({
+                'src': "/User_photo.png",
+                'alt': '...',
+                'class': 'img-thumbnail',
+                'height': '50px', // Set the desired height
+                'width': '50px'   // Set the desired width
+            });
         }
         $(document).ready(function () {
 
@@ -88,7 +110,7 @@
                                         (employee.region === "Iraq") ? 3 :
                                             (employee.region === "Turkey") ? 4 :
                                                 (employee.region === "India") ? 5 :
-                                                    (employee.region === "China") ? 6 : null;
+                                                    (employee.region === "China") ? 6 : 0;
 
                                 $('#txtregion').val(regionValue);
                                 var array = employee.interest.split(/[,\s]+/);
@@ -103,6 +125,13 @@
                                 if (employee.declaration === 'I have declared all the information are correct.') {
                                     $('#declareCheckbox').prop('checked', true);
                                 }
+                                $('#uploadedImage').attr({
+                                    'src': employee.photo_url ? employee.photo_url.substring(1) : "/User_photo.png",
+                                    'alt': '...',
+                                    'class': 'img-thumbnail',
+                                    'height': '50px', // Set the desired height
+                                    'width': '50px'   // Set the desired width
+                                });
                                 //<option value="1" selected>Pakistan</option>
                                 //<option value="2">Iran</option>
                                 //<option value="3">Iraq</option>
@@ -218,17 +247,17 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title"><span class="fa fa-table"></span>&nbsp;Job Application</h5>
-                            <button id="closebtnID" type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="Close" data-bs-dismiss="modal"><i class="fas fa-times-circle"></i></button>
+                            <button id="closebtnID" type="button" class="close" aria-hidden="true" aria-label="Close" onclick="closeUserModal()"><i class="fas fa-times-circle"></i></button>
                         </div>
                         <div class="modal-body form-horizontal">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="fullName"><b>Full Name</b></label>
-                                    <input id="fullName" type="text" class="form-control input-sm" placeholder="Full Name" />
+                                    <input id="fullName" type="text" class="form-control input-sm" placeholder="Full Name"  />
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="txtfname"><b>Father Name</b></label>
-                                    <input id="txtfname" type="text" class="form-control input-sm" placeholder="Father Name" />
+                                    <input id="txtfname" type="text" class="form-control input-sm" placeholder="Father Name"  />
                                 </div>
                             </div>
 
@@ -237,7 +266,8 @@
                                     <label for="txtregion" class="fw-bold">Region</label>
                                     <select class="form-select me-2" aria-label="Default select example" id="txtregion">
                                         <!-- <option selected>Open this select menu</option> -->
-                                        <option value="1" selected>Pakistan</option>
+                                        <option value="0" selected>None</option>
+                                        <option value="1" >Pakistan</option>
                                         <option value="2">Iran</option>
                                         <option value="3">Iraq</option>
                                         <option value="4">Turkey</option>
@@ -284,9 +314,12 @@
                                         <input class="form-check-input" type="checkbox" value="Cricket" id="CricketCheckbox">
                                     </div>
                                     <div class="mb-3">
-                                        <asp:Label runat="server" AssociatedControlID="ImageUpload"><b>Upload your photo</b></asp:Label>
-                                        <asp:FileUpload ID="ImageUpload" runat="server" />
-                                        <asp:Label ID="ErrorMessageLabel" runat="server" ForeColor="Red" Visible="false"></asp:Label>
+                                        <label for="ImageUpload"><b>Upload your photo</b></label>
+                                        <input class="form-control" type="file" id="ImageUpload">
+                                        <Label id="ErrorMessageLabel" ForeColor="Red" style="display:none;"></Label>
+                                    </div>
+                                    <div class="mb-3">
+                                         <img id="uploadedImage" src="/User_photo.png" style="height:50px;width:50px;" >
                                     </div>
 
                                 </div>
@@ -316,8 +349,8 @@
 
                             <div class="row">
                                 <div class="col-md-12 mb-3">
-                                    <input type="checkbox" ID="declareCheckbox" class="form-check-input" value="I have declared all the information are correct." />
-                                    <Label for="declareCheckbox" class="form-check-label"><b>I have declared all the information are correct.</b></Label>
+                                    <input type="checkbox" id="declareCheckbox" class="form-check-input" value="I have declared all the information are correct." />
+                                    <label for="declareCheckbox" class="form-check-label"><b>I have declared all the information are correct.</b></label>
                                     <%--<asp:TextBox runat="server" required="required" TextMode="Number" Enabled="True" name="BrandName" ID="TextBox1" class="form-control input-sm" placeholder="Mobile Number"></asp:TextBox>--%>
                                 </div>
                             </div>
