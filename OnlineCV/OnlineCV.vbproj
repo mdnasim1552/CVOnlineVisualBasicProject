@@ -317,7 +317,7 @@
     </Compile>
     <Compile Include="ControlTestUsingAjax.aspx.vb">
       <DependentUpon>ControlTestUsingAjax.aspx</DependentUpon>
-      <SubType>ASPXCodebehind</SubType>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="DataAccess\IProcessAccess.vb" />
     <Compile Include="DataAccess\ProcessAccess.vb" />
