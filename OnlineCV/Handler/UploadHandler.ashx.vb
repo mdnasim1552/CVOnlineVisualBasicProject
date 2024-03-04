@@ -16,10 +16,10 @@ Public Class UploadHandler
             Dim uniqueFileName As String = String.Empty
             Dim empId As String = context.Request.Form("empId")
             Dim imagepath As String = context.Request.Form("imagepath")
-            If IO.File.Exists(context.Server.MapPath(imagepath)) Then
-                IO.File.Delete(context.Server.MapPath(imagepath))
-            End If
             If (context.Request.Files.Count > 0) Then
+                If IO.File.Exists(context.Server.MapPath(imagepath)) Then
+                    IO.File.Delete(context.Server.MapPath(imagepath))
+                End If
                 Dim allowedImageExtensions As String() = New String() {".jpg", ".jpeg", ".png", ".gif"}
                 Dim files As HttpFileCollection = context.Request.Files
                 For i As Integer = 0 To files.Count - 1

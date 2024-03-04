@@ -6,6 +6,63 @@
  </style>
 
     <script type="text/javascript">
+        function UploadFile() {
+            var empId = $('#applicationid').val();
+            var imagepath = $('#existingImgurl').val();
+            var FileUpload1 = $('#ImageUpload');
+            var file = FileUpload1[0].files;
+            var messageLbl = $('#ErrorMessageLabel');
+            var formData = new FormData();
+            formData.append("empId", empId);
+            formData.append("imagepath", imagepath);
+            for (var i = 0; i < file.length; i++) {
+                formData.append(file[i].name, file[i]);
+            }
+
+            $.ajax({
+                url: "Handler/UploadHandler.ashx",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    // Handle the server response here
+                    if (response == "Error") {
+                        messageLbl.text("Error: Invalid image type. Please upload a JPG, PNG, or GIF file.");
+                        messageLbl.css('color', 'red');
+                        FileUpload1.val('');
+                    } else {                                           
+                        if (response != '') {
+                            messageLbl.text("File uploaded successfully!");
+                            messageLbl.css('color', 'green');
+                            FileUpload1.val('');
+                            $('#uploadedImage').attr({
+                                'src': response.substring(1),
+                                'alt': '...',
+                                'class': 'img-thumbnail',
+                                'height': '50px', // Set the desired height
+                                'width': '50px'   // Set the desired width
+                            });
+                        }                        
+                    }
+
+
+                    console.log(response);
+                },
+                error: function (error) {
+                    // Handle errors here
+                    messageLbl.text(error);
+                    messageLbl.css('color', 'red !important');
+                    console.log(error);
+                }
+            });
+            // Prevent the default postback behavior
+            //return false;
+        }
+
+
+
+
         function openUserModal() {
             /* $('#modalAddUser').modal('hide');*/
             $('.modal-backdrop').remove();
@@ -18,6 +75,8 @@
             $('.modal-backdrop').remove();
             $('#modalAddUser').modal('hide');
             clearModal();
+            LoadApplicantData();
+            
         }
         function clearModal() {
             $('#fullName').val("");
@@ -39,9 +98,15 @@
                 'height': '50px', // Set the desired height
                 'width': '50px'   // Set the desired width
             });
+            $('#ErrorMessageLabel').text("");
         }
         $(document).ready(function () {
 
+            LoadApplicantData();
+
+
+        });
+        function LoadApplicantData() {
             $.ajax({
                 type: "POST",
                 url: 'ApplicantListAjax.aspx/GetApplicant', // Update with the correct route
@@ -78,6 +143,7 @@
 
                     var emplist = JSON.parse(data.d);
                     var table = $('#myTable').find('tbody');
+                    table.empty();
                     for (var i = 0; i < emplist.length; i++) {
                         var employee = emplist[i];
                         var row = $('<tr>').appendTo(table);
@@ -132,6 +198,8 @@
                                     'height': '50px', // Set the desired height
                                     'width': '50px'   // Set the desired width
                                 });
+                                $('#applicationid').val(employee.id);
+                                $('#existingImgurl').val(employee.photo_url);
                                 //<option value="1" selected>Pakistan</option>
                                 //<option value="2">Iran</option>
                                 //<option value="3">Iraq</option>
@@ -193,10 +261,7 @@
                     console.log("Error fetching data.");
                 }
             });
-
-
-        });
-
+        }
  </script>
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
@@ -250,14 +315,15 @@
                             <button id="closebtnID" type="button" class="close" aria-hidden="true" aria-label="Close" onclick="closeUserModal()"><i class="fas fa-times-circle"></i></button>
                         </div>
                         <div class="modal-body form-horizontal">
+                            <input type="hidden" id="applicationid">
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="fullName"><b>Full Name</b></label>
-                                    <input id="fullName" type="text" class="form-control input-sm" placeholder="Full Name"  />
+                                    <input id="fullName" type="text" class="form-control input-sm" placeholder="Full Name" />
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="txtfname"><b>Father Name</b></label>
-                                    <input id="txtfname" type="text" class="form-control input-sm" placeholder="Father Name"  />
+                                    <input id="txtfname" type="text" class="form-control input-sm" placeholder="Father Name" />
                                 </div>
                             </div>
 
@@ -267,26 +333,17 @@
                                     <select class="form-select me-2" aria-label="Default select example" id="txtregion">
                                         <!-- <option selected>Open this select menu</option> -->
                                         <option value="0" selected>None</option>
-                                        <option value="1" >Pakistan</option>
+                                        <option value="1">Pakistan</option>
                                         <option value="2">Iran</option>
                                         <option value="3">Iraq</option>
                                         <option value="4">Turkey</option>
                                         <option value="5">India</option>
                                         <option value="6">China</option>
                                     </select>
-                                    <%--<asp:DropDownList ID="txtregion" CssClass="form-control input-sm" runat="server">
-                                        <asp:ListItem Text="Pakistan" />
-                                        <asp:ListItem Text="Iran" />
-                                        <asp:ListItem Text="Iraq" />
-                                        <asp:ListItem Text="Turkey" />
-                                        <asp:ListItem Text="India" />
-                                        <asp:ListItem Text="China" />
-                                    </asp:DropDownList>--%>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="txtaddress"><b>Address</b></label>
                                     <input type="text" id="txtaddress" class="form-control input-sm" placeholder="Address" />
-                                    <%-- <textarea Enabled="True" ID="txtaddress" cols="20" rows="2" class="form-control input-sm" placeholder=" Address "></textarea>--%>
                                 </div>
                             </div>
                             <div class="row">
@@ -300,10 +357,6 @@
                                     <input type="email" id="txtemail" class="form-control input-sm" placeholder="Email" />
                                 </div>
                             </div>
-
-
-
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
@@ -313,24 +366,23 @@
                                         <label class="form-check-label" for="CricketCheckbox"><b>Cricket</b></label>
                                         <input class="form-check-input" type="checkbox" value="Cricket" id="CricketCheckbox">
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="ImageUpload"><b>Upload your photo</b></label>
-                                        <input class="form-control" type="file" id="ImageUpload">
-                                        <Label id="ErrorMessageLabel" ForeColor="Red" style="display:none;"></Label>
+                                    <div class="mb-3 d-flex">
+                                        <div>
+                                            <label for="ImageUpload"><b>Upload your photo</b></label>
+                                            <input class="form-control" type="file" id="ImageUpload">
+                                            <label id="ErrorMessageLabel" forecolor="Red" ></label>
+                                        </div>
+                                        <div class="mt-4">
+                                            <button type="button" id="btnupload" class="btn btn-secondary" onclick="UploadFile()">Upload</button>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
-                                         <img id="uploadedImage" src="/User_photo.png" style="height:50px;width:50px;" >
+                                        <img id="uploadedImage" src="/User_photo.png" style="height: 50px; width: 50px;">
+                                         <input type="hidden" id="existingImgurl">
                                     </div>
 
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <%-- <asp:Label runat="server" AssociatedControlID="txtgender"><b>Gender</b></asp:Label><br />
-                                    <asp:RadioButtonList CssClass="form-group" ID="txtgender" runat="server">
-                                        <asp:ListItem Text="Male" />
-                                        <asp:ListItem Text="Female" />
-                                    </asp:RadioButtonList>
-                                    --%>
-
                                     <!-- HTML code -->
                                     <div class="form-group">
                                         <label class="fw-bold">Gender:</label><br>
@@ -351,13 +403,11 @@
                                 <div class="col-md-12 mb-3">
                                     <input type="checkbox" id="declareCheckbox" class="form-check-input" value="I have declared all the information are correct." />
                                     <label for="declareCheckbox" class="form-check-label"><b>I have declared all the information are correct.</b></label>
-                                    <%--<asp:TextBox runat="server" required="required" TextMode="Number" Enabled="True" name="BrandName" ID="TextBox1" class="form-control input-sm" placeholder="Mobile Number"></asp:TextBox>--%>
                                 </div>
                             </div>
                         </div>
 
                         <div class="modal-footer">
-                            <%--<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>--%>
                             <button type="button" id="btnsave" class="btn btn-secondary" style="width: 220px;">Save</button>
                         </div>
                     </div>
