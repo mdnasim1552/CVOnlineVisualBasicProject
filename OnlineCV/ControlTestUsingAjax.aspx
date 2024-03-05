@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="vb" AutoEventWireup="false" MasterPageFile="~/Site.Master" CodeBehind="ControlTestUsingAjax.aspx.vb" Inherits="OnlineCV.ControlTestUsingAjax" %>
+﻿<%@ Page Title="" Language="vb" AutoEventWireup="false" MasterPageFile="~/Site.Master" CodeBehind="ControlTestUsingAjax.aspx.vb" Inherits="OnlineCV.ControlTestUsingAjax"%>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <div id="applicantControlContainer">

@@ -428,6 +428,7 @@
                         <asp:HiddenField ID="HiddenField1" runat="server" ClientIDMode="Static" />
                     </div>
                 </div>
+                 <asp:Button Text="Update" ID="updateBTN" CssClass="btn btn-secondary" Width="220px" runat="server" OnClick="updateBTN_Click" formnovalidate />
             </div>
         </div>
 
