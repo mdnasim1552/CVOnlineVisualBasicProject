@@ -12,7 +12,7 @@ Public Class ApplicantControl
     Private _processAccess As IProcessAccess = New ProcessAccess()
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
         If Not IsPostBack Then
-            Me.GetApplicantList()
+
         End If
         Me.GetApplicantList()
     End Sub
@@ -141,7 +141,7 @@ Public Class ApplicantControl
             IO.File.Delete(Server.MapPath(imagepath))
         End If
     End Sub
-    Protected Async Sub gvapplicant_RowDeleting(sender As Object, e As GridViewDeleteEventArgs)
+    Protected Sub gvapplicant_RowDeleting(sender As Object, e As GridViewDeleteEventArgs)
         Dim dt As DataTable = DirectCast(ViewState("jobapplication"), DataTable)
         Dim applicantid As String = DirectCast(Me.gvapplicant.Rows(e.RowIndex).FindControl("lblapplicationid"), Label).Text.Trim()
         Dim Hphoto_urlID As String = TryCast(gvapplicant.Rows(e.RowIndex).FindControl("lblHiddenphotoo_urlID"), Label).Text.Trim()
@@ -153,7 +153,7 @@ Public Class ApplicantControl
             New SqlParameter("@CallType", jobCallType),
             New SqlParameter("@UserID", applicantid)
         }
-        Dim result As Boolean = Await _processAccess.ExecuteTransactionalOperationAsync(procedureName, jobparameters)
+        Dim result As Boolean = _processAccess.ExecuteTransactionalOperation(procedureName, jobparameters)
         If result Then
             DeleteImage(Hphoto_urlID)
             dt.Rows(Me.gvapplicant.PageIndex * Me.gvapplicant.PageSize + e.RowIndex).Delete()
@@ -303,4 +303,7 @@ Public Class ApplicantControl
 
     End Sub
 
+    Protected Sub updateBTN_Click(sender As Object, e As EventArgs)
+        Me.Update_Data()
+    End Sub
 End Class

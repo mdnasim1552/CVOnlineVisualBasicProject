@@ -116,6 +116,15 @@ Auto-generated field.
 To modify move field declaration from designer file to code-behind file.
 </remarks>
 </member>
+<member name="F:OnlineCV.ApplicantControl._updateBTN">
+<summary>
+updateBTN control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
 <member name="F:OnlineCV.ApplicantControl._fullName">
 <summary>
 fullName control.
