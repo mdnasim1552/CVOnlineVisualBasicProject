@@ -11,10 +11,11 @@ Public Class ApplicantControl
 
     Private _processAccess As IProcessAccess = New ProcessAccess()
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
-        If Not IsPostBack Then
-
-        End If
         Me.GetApplicantList()
+        If Not IsPostBack Then
+            Me.Data_Bind()
+        End If
+
     End Sub
 
     Private Sub SaveValue()
@@ -64,9 +65,10 @@ Public Class ApplicantControl
         End If
 
         Me.GetApplicantList()
+        Me.Data_Bind()
     End Sub
 
-    Private Sub Data_Bind()
+    Public Sub Data_Bind()
         Dim dt As DataTable = DirectCast(ViewState("jobapplication"), DataTable)
         Me.gvapplicant.PageSize = Convert.ToInt32(Me.ddlpagesize.SelectedValue.ToString())
         Me.gvapplicant.DataSource = dt
@@ -82,7 +84,6 @@ Public Class ApplicantControl
 
         ViewState("jobapplication") = ds.Tables(0)
         ViewState("educational_qualification") = ds.Tables(1)
-        Me.Data_Bind()
     End Sub
     Protected Sub gvapplicant_RowEditing(sender As Object, e As GridViewEditEventArgs)
         Me.gvapplicant.EditIndex = e.NewEditIndex
@@ -267,6 +268,7 @@ Public Class ApplicantControl
         CricketCheckbox.Checked = False
         ScriptManager.RegisterStartupScript(Me, Me.GetType(), "alert", "closeUserModal();", True)
         Me.GetApplicantList()
+        Me.Data_Bind()
     End Sub
 
     Protected Sub printid_Click(sender As Object, e As EventArgs)

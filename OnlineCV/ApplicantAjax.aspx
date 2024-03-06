@@ -31,7 +31,7 @@
                         messageLbl.text("Error: Invalid image type. Please upload a JPG, PNG, or GIF file.");
                         messageLbl.css('color', 'red');
                         FileUpload1.val('');
-                    } else {                                           
+                    } else {
                         if (response != '') {
                             messageLbl.text("File uploaded successfully!");
                             messageLbl.css('color', 'green');
@@ -43,7 +43,7 @@
                                 'height': '50px', // Set the desired height
                                 'width': '50px'   // Set the desired width
                             });
-                        }                        
+                        }
                     }
 
 
@@ -76,7 +76,7 @@
             $('#modalAddUser').modal('hide');
             clearModal();
             LoadApplicantData();
-            
+
         }
         function clearModal() {
             $('#fullName').val("");
@@ -109,12 +109,10 @@
         function LoadApplicantData() {
             $.ajax({
                 type: "POST",
-                url: 'ApplicantListAjax.aspx/GetApplicant', // Update with the correct route
+                url: 'ApplicantAjax.aspx/GetApplicant', // Update with the correct route
                 contentType: 'application/json',
                 dataType: "json",
                 success: function (data) {
-
-
 
                     //let i = 1;
                     //var tableBody = $("#myTable tbody");
@@ -161,6 +159,21 @@
                         var editBtn = $('<button>').addClass('btn btn-primary btn-sm').text('Edit').on('click', (function (employee) {
                             return function (event) {
                                 event.preventDefault(); // Prevent default action of the button click
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: 'ApplicantAjax.aspx/GetEducationInfo', // Update with the correct route
+                                    contentType: 'application/json',
+                                    dataType: "json",
+                                    data: JSON.stringify({ id: employee.id }),
+                                    success: function (response) {
+                                    },
+                                    error: function (error) {
+                                        console.log("Error fetching data.");
+                                    }
+                                });
+
+
                                 $('#fullName').val(employee.fullname);
                                 $('#txtfname').val(employee.fathername);
                                 $('#txtaddress').val(employee.address);
@@ -370,7 +383,7 @@
                                         <div>
                                             <label for="ImageUpload"><b>Upload your photo</b></label>
                                             <input class="form-control" type="file" id="ImageUpload">
-                                            <label id="ErrorMessageLabel" forecolor="Red" ></label>
+                                            <label id="ErrorMessageLabel" forecolor="Red"></label>
                                         </div>
                                         <div class="mt-4">
                                             <button type="button" id="btnupload" class="btn btn-secondary" onclick="UploadFile()">Upload</button>
@@ -378,7 +391,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <img id="uploadedImage" src="/User_photo.png" style="height: 50px; width: 50px;">
-                                         <input type="hidden" id="existingImgurl">
+                                        <input type="hidden" id="existingImgurl">
                                     </div>
 
                                 </div>
@@ -397,7 +410,37 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
 
+                                    <table class="table table-bordered myTable">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Exam</th>
+                                                <th scope="col">Board</th>
+                                                <th scope="col">Year</th>
+                                                <th scope="col">Result</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dynamicadd">
+                                            <tr>
+                                                <td>
+                                                    <input type="text" name="exam[]" id="exam" class="form-control"></td>
+                                                <td>
+                                                    <input type="text" name="board[]" id="board" class="form-control"></td>
+                                                <td>
+                                                    <input type="text" name="year[]" id="year" class="form-control"></td>
+                                                <td>
+                                                    <input type="text" name="result[]" id="result" class="form-control"></td>
+                                                <td>
+                                                    <button type="button" id="add" class=" form-control btn btn-success">+</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-md-12 mb-3">

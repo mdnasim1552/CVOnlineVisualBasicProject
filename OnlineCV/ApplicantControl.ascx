@@ -1,4 +1,4 @@
-﻿<%@ Control Language="vb" AutoEventWireup="false"  CodeBehind="ApplicantControl.ascx.vb" Inherits="OnlineCV.ApplicantControl" %>
+﻿<%@ Control Language="vb" AutoEventWireup="false"  CodeBehind="ApplicantControl.ascx.vb" Inherits="OnlineCV.ApplicantControl"  EnableViewState="true"%>
 
 <style>
     .SumoSelect .select-all {
