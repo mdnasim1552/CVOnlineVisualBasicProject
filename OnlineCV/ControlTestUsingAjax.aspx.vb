@@ -30,7 +30,9 @@ Public Class ControlTestUsingAjax
         applicantControl = DirectCast(LoadControl("~/ApplicantControl.ascx"), ApplicantControl)
 
         applicantControl.ID = "ApplicantControl"
+
         sortable.Controls.Add(applicantControl)
+        applicantControl.Data_Bind()
     End Sub
 
     Protected Sub Page_PreInit(sender As Object, e As EventArgs) Handles Me.Init
