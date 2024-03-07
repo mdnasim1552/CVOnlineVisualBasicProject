@@ -38,7 +38,7 @@ Public Class ApplicantAjax
         Dim obj As New DataTableToList()
         Dim EduList As List(Of EducationalQualification) = obj.ConvertDataTableToList(Of EducationalQualification)(ds.Tables(1))
         Dim filteredEduList = (From edu In EduList
-                               Where edu.Edu_id = id
+                               Where edu.jobapplication_id = id
                                Select edu).ToList()
 
         Dim json As String = JsonConvert.SerializeObject(filteredEduList)
