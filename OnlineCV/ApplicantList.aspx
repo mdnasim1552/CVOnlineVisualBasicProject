@@ -41,8 +41,8 @@
             var formData = new FormData();
             formData.append("empId", empId);
             formData.append("imagepath", imagepath);
-            for (var i = 0; i < file.length; i++) {
-                formData.append(file[i].name, file[i]);
+            for (var j = 0; j < file.length; j++) {
+                formData.append(file[j].name, file[j]);
             }
 
             $.ajax({

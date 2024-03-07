@@ -6,6 +6,7 @@
  </style>
 
     <script type="text/javascript">
+        var educountrow = 0;
         function UploadFile() {
             var empId = $('#applicationid').val();
             var imagepath = $('#existingImgurl').val();
@@ -99,11 +100,26 @@
                 'width': '50px'   // Set the desired width
             });
             $('#ErrorMessageLabel').text("");
+
+            if ($('#dynamicadd tr').length > 1) {
+                // Remove all rows except the first one
+                educountrow = 0;
+                $('#dynamicadd tr:gt(0)').remove();
+            }
         }
         $(document).ready(function () {
 
             LoadApplicantData();
-
+            $('#add').click(function () {
+                //alert('ok');
+                educountrow++;
+                $('#dynamicadd').append('<tr id="row' + educountrow + '"><td><input type="text" name="exam[]" id = "exam" class= "form-control" ></td ><td><input type="text" name="board[]" id="board" class="form-control"></td><td><input type="text" name="year[]" id="year" class="form-control"></td><td><input type="text" name="result[]" id="result" class="form-control"></td><td><button type="button" id="' + educountrow + '" class="btn btn-danger remove_row form-control">-</button></td></tr > ');
+            });
+            $(document).on('click', '.remove_row', function () {
+                var row_id = $(this).attr("id");
+                $('#row' + row_id + '').remove();
+                educountrow--;
+            });
 
         });
         function LoadApplicantData() {
@@ -167,6 +183,30 @@
                                     dataType: "json",
                                     data: JSON.stringify({ id: employee.id }),
                                     success: function (response) {
+                                        var edulist = JSON.parse(response.d);
+                                        if (edulist.length > 0) {
+                                            var edu;
+                                            for (var j = 0; j < edulist.length; j++) {
+                                                
+                                                if (j > 0) {
+                                                    educountrow++;
+                                                    edu = edulist[educountrow];
+                                                    $('#dynamicadd').append('<tr id="row' + educountrow + '"><td><input type="text" name="exam[]" id = "exam" class= "form-control" value="'
+                                                        + edu.exam + '"></td ><td><input type="text" name="board[]" id="board" class="form-control" value="'
+                                                        + edu.board + '"></td><td><input type="text" name="year[]" id="year" class="form-control" value="'
+                                                        + edu.year + '"></td><td><input type="text" name="result[]" id="result" class="form-control" value="'
+                                                        + edu.result + '"></td><td><button type="button" id="'
+                                                        + educountrow + '" class="btn btn-danger remove_row form-control">-</button></td></tr > ');
+                                                } else {
+                                                    edu = edulist[educountrow];
+                                                    $('#exam').val(edu.exam);
+                                                    $('#board').val(edu.board);
+                                                    $('#year').val(edu.year);
+                                                    $('#result').val(edu.result);
+                                                }
+                                                
+                                            }
+                                        }
                                     },
                                     error: function (error) {
                                         console.log("Error fetching data.");
