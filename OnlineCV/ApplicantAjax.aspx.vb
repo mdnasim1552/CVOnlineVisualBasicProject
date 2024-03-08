@@ -2,6 +2,7 @@
 Imports CVLibrary
 Imports Newtonsoft.Json
 Imports System.Data.SqlClient
+Imports System.Net
 Imports System.Web.Services
 
 Public Class ApplicantAjax
@@ -45,4 +46,56 @@ Public Class ApplicantAjax
 
         Return json
     End Function
+
+    <WebMethod()>
+    Public Shared Function UpdateEmpAndEducationInfo(jsonData As String, empData As String) As String
+        Dim eduDataList = JsonConvert.DeserializeObject(Of List(Of EducationalQualification))(jsonData)
+        Dim emp = JsonConvert.DeserializeObject(Of Employee)(empData)
+        Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT02"
+
+        Dim _p As IProcessAccess = New ProcessAccess()
+        Dim jobCallType = "UPDATEMPLOYEEINFOUSINGAJAX"
+        Dim jobparameters As SqlParameter() = New SqlParameter() {
+            New SqlParameter("@CallType", jobCallType),
+            New SqlParameter("@Desc1", emp.fullname),
+            New SqlParameter("@Desc2", emp.fathername),
+            New SqlParameter("@Desc3", emp.email),
+            New SqlParameter("@Desc4", emp.mobile),
+            New SqlParameter("@Desc5", emp.address),
+            New SqlParameter("@Desc6", emp.gender),
+            New SqlParameter("@Desc7", emp.region),
+            New SqlParameter("@Desc8", emp.declaration),
+            New SqlParameter("@Desc9", emp.interest),
+            New SqlParameter("@Desc10", emp.photo_url),
+            New SqlParameter("@Desc11", emp.id)
+        }
+        Dim result As Boolean = _p.ExecuteTransactionalOperation(procedureName, jobparameters)
+        If result Then
+            Dim jobparameters2 As SqlParameter() = New SqlParameter() {
+                 New SqlParameter("@CallType", "DeleteEducational_QualificationRecord"),
+                 New SqlParameter("@Desc1", emp.id)
+            }
+            Dim dresult = _p.ExecuteTransactionalOperation(procedureName, jobparameters2)
+
+            Dim CallType = "InsertEducational_QualificationRecord"
+            For Each row As EducationalQualification In eduDataList
+                Dim eduparameters As SqlParameter() = New SqlParameter() {
+                    New SqlParameter("@CallType", CallType),
+                    New SqlParameter("@Desc1", row.exam),
+                    New SqlParameter("@Desc2", row.board),
+                    New SqlParameter("@Desc3", row.year),
+                    New SqlParameter("@Desc4", row.result),
+                    New SqlParameter("@Desc5", emp.id)
+                }
+                Dim Eresult As String = _p.GetTransactionalOperation("SP_UTILITY_EMPLOYEE_MGT", eduparameters)
+                If Eresult Is Nothing Then
+                    Return "Educational QualificationRecord is not updated."
+                End If
+            Next
+        Else
+            Return "Applicant Data is not updated!"
+        End If
+        Return "Updated Successfully"
+    End Function
+
 End Class
