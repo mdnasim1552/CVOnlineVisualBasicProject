@@ -44,6 +44,7 @@
                                 'height': '50px', // Set the desired height
                                 'width': '50px'   // Set the desired width
                             });
+                            $('#existingImgurl').val(response);
                         }
                     }
 
@@ -60,9 +61,7 @@
             // Prevent the default postback behavior
             //return false;
         }
-
-
-
+        
 
         function openUserModal() {
             /* $('#modalAddUser').modal('hide');*/
@@ -119,6 +118,84 @@
                 var row_id = $(this).attr("id");
                 $('#row' + row_id + '').remove();
                 educountrow--;
+            });
+
+
+            $("#btnsave").click(function () {
+                var myTableData = [];
+                var id = $('#applicationid').val();
+                var photo_url = $('#existingImgurl').val();
+                var fullName = $('#fullName').val();
+                var fathername = $('#txtfname').val();
+                var address = $('#txtaddress').val();
+                var mobile = $('#txtcell').val();
+                var email = $('#txtemail').val();
+                var region = $('#txtregion option:selected').text();
+                var interest = "";
+                if ($('#FootballCheckbox').prop('checked') && $('#CricketCheckbox').prop('checked')) {
+                    interest = "Football,Cricket";
+                } else if ($('#FootballCheckbox').prop('checked')) {
+                    interest = "Football";
+                } else if ($('#CricketCheckbox').prop('checked')) {
+                    interest = "Cricket";
+                }
+                var declaration = "";
+                if ($('#declareCheckbox').prop('checked')) {
+                    declaration = "I have declared all the information are correct.";
+                }
+                var gender = "";
+
+                if ($('#male').prop('checked')) {
+                    gender = "Male";
+                } else if ($('#female').prop('checked')) {
+                    gender = "Female";
+                }
+
+                $('#dynamicadd tr').each(function (row) {
+                    //console.log('Hello');
+                    myTableData[row] = {
+                        "Exam": $(this).find('input[name="exam[]"]').val(),
+                        "Board": $(this).find('input[name="board[]"]').val(),
+                        "Year": $(this).find('input[name="year[]"]').val(),
+                        "Result": $(this).find('input[name="result[]"]').val()
+
+                    }
+                });
+
+                var emp = {
+                    id: id,
+                    fullName: fullName,
+                    fathername: fathername,
+                    email: email,
+                    mobile: mobile,
+                    address: address,
+                    gender: gender,
+                    region: region,
+                    declaration: declaration,
+                    interest: interest,
+                    photo_url: photo_url
+                };
+
+                console.log(emp);
+                console.log(myTableData);
+                var jsonData = JSON.stringify(myTableData);
+                var empData = JSON.stringify(emp);
+                $.ajax({
+                    type: "POST",
+                    url: 'ApplicantAjax.aspx/UpdateEmpAndEducationInfo', // Update with the correct route
+                    contentType: 'application/json',
+                    dataType: "json",
+                    data: JSON.stringify({ jsonData: jsonData, empData: empData }),
+                    success: function (response) {
+                        
+                    },
+                    error: function (error) {
+                        console.log("Error Updating data.");
+                    }
+                });
+
+
+
             });
 
         });
@@ -187,7 +264,7 @@
                                         if (edulist.length > 0) {
                                             var edu;
                                             for (var j = 0; j < edulist.length; j++) {
-                                                
+
                                                 if (j > 0) {
                                                     educountrow++;
                                                     edu = edulist[educountrow];
@@ -204,7 +281,7 @@
                                                     $('#year').val(edu.year);
                                                     $('#result').val(edu.result);
                                                 }
-                                                
+
                                             }
                                         }
                                     },
