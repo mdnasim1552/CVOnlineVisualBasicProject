@@ -48,6 +48,11 @@ Public Class ApplicantAjax
     End Function
 
     <WebMethod()>
+    Public Shared Function InsertEmpAndEducationInfo(jsonData As String, empData As String) As String
+        Return "Inserted Successfully"
+    End Function
+
+    <WebMethod()>
     Public Shared Function UpdateEmpAndEducationInfo(jsonData As String, empData As String) As String
         Dim eduDataList = JsonConvert.DeserializeObject(Of List(Of EducationalQualification))(jsonData)
         Dim emp = JsonConvert.DeserializeObject(Of Employee)(empData)
@@ -96,6 +101,23 @@ Public Class ApplicantAjax
             Return "Applicant Data is not updated!"
         End If
         Return "Updated Successfully"
+    End Function
+    <WebMethod()>
+    Public Shared Function DeleteEmpAndEducationInfo(id As String, photo_url As String) As String
+        Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT02"
+        Dim jobCallType = "DELETEJOBAPPLICATION"
+        Dim jobparameters As SqlParameter() = New SqlParameter() {
+            New SqlParameter("@CallType", jobCallType),
+            New SqlParameter("@UserID", id)
+        }
+        Dim _p As IProcessAccess = New ProcessAccess()
+        Dim result As Boolean = _p.ExecuteTransactionalOperation(procedureName, jobparameters)
+        If result Then
+            If IO.File.Exists(HttpContext.Current.Server.MapPath(photo_url)) Then
+                IO.File.Delete(HttpContext.Current.Server.MapPath(photo_url))
+            End If
+        End If
+        Return "Data Deleted successfully"
     End Function
 
 End Class

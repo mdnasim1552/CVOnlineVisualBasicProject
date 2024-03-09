@@ -61,7 +61,7 @@
             // Prevent the default postback behavior
             //return false;
         }
-        
+
 
         function openUserModal() {
             /* $('#modalAddUser').modal('hide');*/
@@ -79,6 +79,7 @@
 
         }
         function clearModal() {
+            $('#applicationid').val("");
             $('#fullName').val("");
             $('#txtfname').val("");
             $('#txtaddress').val("");
@@ -180,19 +181,40 @@
                 console.log(myTableData);
                 var jsonData = JSON.stringify(myTableData);
                 var empData = JSON.stringify(emp);
-                $.ajax({
-                    type: "POST",
-                    url: 'ApplicantAjax.aspx/UpdateEmpAndEducationInfo', // Update with the correct route
-                    contentType: 'application/json',
-                    dataType: "json",
-                    data: JSON.stringify({ jsonData: jsonData, empData: empData }),
-                    success: function (response) {
-                        
-                    },
-                    error: function (error) {
-                        console.log("Error Updating data.");
-                    }
-                });
+                if (id != '') {
+                    $.ajax({
+                        type: "POST",
+                        url: 'ApplicantAjax.aspx/UpdateEmpAndEducationInfo', // Update with the correct route
+                        contentType: 'application/json',
+                        dataType: "json",
+                        data: JSON.stringify({ jsonData: jsonData, empData: empData }),
+                        success: function (response) {
+                            showContent('Data Updated successfully');
+                        },
+                        error: function (error) {
+                            showContentFail('Error Updating data ' + error.responseText);
+                            //console.log("Error Updating data.");
+                        }
+                    });
+                } else {
+
+                    $.ajax({
+                        type: "POST",
+                        url: 'ApplicantAjax.aspx/InsertEmpAndEducationInfo', // Update with the correct route
+                        contentType: 'application/json',
+                        dataType: "json",
+                        data: JSON.stringify({ jsonData: jsonData, empData: empData }),
+                        success: function (response) {
+                            showContent('Data Inserted successfully');
+                        },
+                        error: function (error) {
+                            showContentFail('Error Inserting data ' + error.responseText);
+                            //console.log("Error Updating data.");
+                        }
+                    });
+
+                }
+               
 
 
 
@@ -369,14 +391,30 @@
                             'width': '50px'   // Set the desired width
                         })));
                         //Add delete button column with a button
-                        var deleteBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete').on('click', (function (id) {
+                        var deleteBtn = $('<button>').addClass('btn btn-danger btn-sm').text('Delete').on('click', (function (employee) {
                             return function (event) {
                                 event.preventDefault(); // Prevent default action of the button click
                                 // Here, 'id' refers to the 'employee.id' of this row
-                                console.log(id);
+                                //console.log(id);
+                                $.ajax({
+                                    type: "POST",
+                                    url: 'ApplicantAjax.aspx/DeleteEmpAndEducationInfo', // Update with the correct route
+                                    contentType: 'application/json',
+                                    dataType: "json",
+                                    data: JSON.stringify({ id: employee.id, photo_url: employee.photo_url ? employee.photo_url : "" }),
+                                    success: function (response) {
+                                        showContent(response.d);
+                                        LoadApplicantData();
+                                    },
+                                    error: function (error) {
+                                        showContentFail('Error Deleting data' + error.responseText);
+                                        //console.log("Error Updating data.");
+                                    }
+                                });
+
                                 // You can perform further actions using 'id', such as sending delete request to the server
                             };
-                        })(employee.id)); // Pass 'employee.id' to the closure
+                        })(employee)); // Pass 'employee.id' to the closure
                         row.append($('<td>').append(deleteBtn));
 
                         //// Append button to get data of the row
@@ -404,7 +442,26 @@
                     </header>
                 </div>
                 <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-11" style="margin-top: 21px;">
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddUser">
+                                <i class="bi bi-plus fw-bold"></i>
+                            </button>
+                        </div>
+                        <div class="col-md-1">
+                            <label for="ddlpagesize" class="fw-bold">Page Size</label>
+                            <select class="form-select me-2" aria-label="Default select example" id="ddlpagesize">
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="30">30</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                                <option value="200">200</option>
+                                <option value="5000">5000</option>
+                            </select>
 
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-12">
                             <table class="table table-sm table-hover caption-top display" id="myTable">
