@@ -13,17 +13,27 @@ Public Class ApplicantAjax
     End Sub
 
     <WebMethod()>
-    Public Shared Function GetApplicant() As String
+    Public Shared Function GetApplicant(PageNumber As Integer, PageSize As Integer) As String
         Dim _p As IProcessAccess = New ProcessAccess()
         Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT02"
-        Dim CallType = "GETJOBAPPLICATIONS"
+        Dim CallType = "GETJOBAPPLICATIONS02"
         Dim parameters As SqlParameter() = New SqlParameter() {
-        New SqlParameter("@CallType", CallType)
+        New SqlParameter("@CallType", CallType),
+        New SqlParameter("@Desc1", PageNumber),
+        New SqlParameter("@Desc2", PageSize)
         }
         Dim ds = _p.GetDataSets(procedureName, parameters)
+        Dim TotalPages As Integer = ds.Tables(0).Rows(0)("TotalPage")
         Dim obj As New DataTableToList()
-        Dim jsonData As List(Of Employee) = obj.ConvertDataTableToList(Of Employee)(ds.Tables(0))
-        Dim json As String = JsonConvert.SerializeObject(jsonData)
+        Dim EmployeeList As List(Of Employee) = obj.ConvertDataTableToList(Of Employee)(ds.Tables(1))
+
+        Dim result As New With {
+            .TotalPage = TotalPages,
+            .EmployeeData = EmployeeList
+        }
+
+
+        Dim json As String = JsonConvert.SerializeObject(result)
 
         Return json
     End Function
@@ -31,13 +41,12 @@ Public Class ApplicantAjax
     Public Shared Function GetEducationInfo(id As String) As String
         Dim _p As IProcessAccess = New ProcessAccess()
         Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT02"
-        Dim CallType = "GETJOBAPPLICATIONS"
+        Dim CallType = "GETEDUCATIONALQULIFICATIONS"
         Dim parameters As SqlParameter() = New SqlParameter() {
         New SqlParameter("@CallType", CallType)
         }
-        Dim ds = _p.GetDataSets(procedureName, parameters)
-        Dim obj As New DataTableToList()
-        Dim EduList As List(Of EducationalQualification) = obj.ConvertDataTableToList(Of EducationalQualification)(ds.Tables(1))
+        Dim EduList = _p.GetList(Of EducationalQualification)(procedureName, parameters)
+        ' Dim EduList As List(Of EducationalQualification) = obj.GetList() 'obj.ConvertDataTableToList(Of EducationalQualification)(ds.Tables(0))
         Dim filteredEduList = (From edu In EduList
                                Where edu.jobapplication_id = id
                                Select edu).ToList()
