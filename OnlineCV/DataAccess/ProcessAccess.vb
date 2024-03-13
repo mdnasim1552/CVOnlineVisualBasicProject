@@ -108,6 +108,48 @@ Public Class ProcessAccess
             Return Nothing
         End Try
     End Function
+
+    Public Function GetList(Of T As New)(SQLprocName As String, ParamArray parameters() As SqlParameter) As List(Of T) Implements IProcessAccess.GetList
+        Try
+            If TypeOf _dbConnection Is SqlConnection Then
+                Dim sqlConnection As SqlConnection = DirectCast(_dbConnection, SqlConnection)
+                If sqlConnection.State <> ConnectionState.Open Then
+                    sqlConnection.Open()
+                End If
+
+                Dim resultList As List(Of T) = New List(Of T)
+                Dim cmd As SqlCommand = New SqlCommand()
+                cmd.CommandText = SQLprocName
+                cmd.CommandType = CommandType.StoredProcedure
+                cmd.Parameters.AddRange(parameters)
+                cmd.Connection = sqlConnection
+                cmd.CommandTimeout = 120
+
+                Using reader As SqlDataReader = cmd.ExecuteReader(CommandBehavior.CloseConnection)
+                    If reader.HasRows Then
+                        While reader.Read()
+                            Dim instance As T = New T()
+
+                            For inc As Integer = 0 To reader.FieldCount - 1
+                                Dim type As Type = instance.GetType()
+                                Dim prop As PropertyInfo = type.GetProperty(reader.GetName(inc))
+                                prop.SetValue(instance, reader.GetValue(inc), Nothing)
+                            Next
+
+                            resultList.Add(instance)
+                        End While
+                    End If
+                End Using
+                Return resultList
+            Else
+                Return Nothing
+            End If
+
+        Catch ex As Exception
+            Return Nothing
+        End Try
+    End Function
+
     'Public Async Function GetAllAsync(Of T As New)(SQLprocName As String, ParamArray parameters As SqlParameter()) As Task(Of List(Of T)) Implements IProcessAccess.GetAllAsync
     '    Try
     '        Dim resultList As New List(Of T)()

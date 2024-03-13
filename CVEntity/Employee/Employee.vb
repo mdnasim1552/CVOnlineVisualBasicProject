@@ -1,4 +1,5 @@
 ﻿Public Class Employee
+    Public Property RowNum As Integer
     Public Property id As String
     Public Property fullname As String
     Public Property fathername As String

@@ -7,6 +7,7 @@
 
     <script type="text/javascript">
         var educountrow = 0;
+        var currentPage = 1;
         function UploadFile() {
             var empId = $('#applicationid').val();
             var imagepath = $('#existingImgurl').val();
@@ -75,7 +76,6 @@
             $('.modal-backdrop').remove();
             $('#modalAddUser').modal('hide');
             clearModal();
-            LoadApplicantData();
 
         }
         function clearModal() {
@@ -106,10 +106,24 @@
                 educountrow = 0;
                 $('#dynamicadd tr:gt(0)').remove();
             }
+            $('#exam').val('');
+            $('#board').val('');
+            $('#year').val('');
+            $('#result').val('');
         }
         $(document).ready(function () {
 
-            LoadApplicantData();
+            LoadApplicantData(currentPage);
+            $("#ddlpagesize").change(function () {
+                //// Call your function when the value changes
+                //var selectedValue = $(this).val();
+                //console.log("Selected value changed to: " + selectedValue);
+                //pageNumber = 1
+                //AddActive(pageNumber - 1);
+                //pageSize = selectedValue
+                //callData()
+                LoadApplicantData(currentPage);
+            });
             $('#add').click(function () {
                 //alert('ok');
                 educountrow++;
@@ -120,7 +134,6 @@
                 $('#row' + row_id + '').remove();
                 educountrow--;
             });
-
 
             $("#btnsave").click(function () {
                 var myTableData = [];
@@ -189,6 +202,7 @@
                         dataType: "json",
                         data: JSON.stringify({ jsonData: jsonData, empData: empData }),
                         success: function (response) {
+                            LoadApplicantData();
                             showContent('Data Updated successfully');
                         },
                         error: function (error) {
@@ -214,21 +228,83 @@
                     });
 
                 }
-               
+                
 
 
 
             });
 
         });
+       
+        function addpagination(totalPages, current) {
+            if (totalPages > 0) {
+                currentPage = current
+                let startPage = currentPage - 5;
+                let endPage = currentPage + 4
+                if (startPage <= 0) {
+                    endPage = endPage - (startPage - 1);
+                    startPage = 1;
+                }
+                if (endPage > totalPages) {
+                    endPage = totalPages;
+                    If(endPage > 10)
+                    startPage = endPage - 9;
+                }
+                console.log(" totalpage", totalPages)
+                let list = "";
+                for (let i = startPage; i <= endPage; i++) {
+                    list += `<li class="page-item"><a class="page-link ${i == currentPage ? 'active' : ''}"    onclick="paginationClick(${i})">${i}</a></li>`
+                }
+                $("#list").empty();
+                $("#list").append(list);
+                
+            }         
+
+        }
+        function paginationClick(pageNum) {
+            currentPage = pageNum;
+            LoadApplicantData();
+        }
+        function getActivePageNumber() {
+            return $(".page-item.active").index() + 1;
+        }
+        function AddActive(value) {
+            $(".page-item").removeClass("active");
+            $(".page-item").eq(value).addClass("active");
+        }
+ //        Public Sub New(totalItems As Integer, currentPage As Integer, Optional pageSize As Integer = 10)
+ //    Dim totalPages As Integer = Math.Ceiling(totalItems / pageSize)
+ //    Dim startPage As Integer = currentPage - 5
+ //    Dim endPage As Integer = currentPage + 4
+ //    If endPage <= 0 Then
+ //       endPage = endPage - (startPage - 1)
+ //       startPage = 1
+ //    End If
+ //    If endPage > totalPages Then
+ //       endPage = totalPages
+ //        If endPage > 10 Then
+ //       startPage = endPage - 9
+ //        End If
+ //    End If
+ //       Me.TotalItem = totalPages
+ //       Me.CurrentPage = currentPage
+ //       Me.PageSize = pageSize
+ //       Me.TotalPages = totalPages
+ //       Me.StartPage = startPage
+ //       Me.EndPage = endPage
+        //End Sub
+        function Pager() {
+
+        }
         function LoadApplicantData() {
+            var PageSize = $('#ddlpagesize').val();
             $.ajax({
                 type: "POST",
                 url: 'ApplicantAjax.aspx/GetApplicant', // Update with the correct route
                 contentType: 'application/json',
                 dataType: "json",
+                data: JSON.stringify({ PageNumber: currentPage, PageSize: PageSize }),
                 success: function (data) {
-
                     //let i = 1;
                     //var tableBody = $("#myTable tbody");
                     //tableBody.empty(); // Clear existing rows
@@ -253,14 +329,37 @@
                     //    );
                     //    i++;
                     //});
-
-                    var emplist = JSON.parse(data.d);
                     var table = $('#myTable').find('tbody');
                     table.empty();
+                    /* $(".tbody").html('');*/
+                    $('#myTable').find('thead').empty();
+                    /*$(".thead").html('');*/
+                    var newHead = `<tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">Application_ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Father's Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Mobile</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Region</th>
+                        <th scope="col">Declaration</th>
+                        <th scope="col">Interest</th>
+                        <th scope="col">Photo</th>
+                        <th scope="col">Delete</th>
+                        </tr>`;
+                    $('#myTable').find('thead').append(newHead);
+                    var jsonData = JSON.parse(data.d);
+                    var emplist = jsonData.EmployeeData;
+                    var TotalPages = jsonData.TotalPage;
+                    addpagination(TotalPages, currentPage);
+                    //AddActive(currentPageNumber - 1);
                     for (var i = 0; i < emplist.length; i++) {
                         var employee = emplist[i];
                         var row = $('<tr>').appendTo(table);
-                        row.append($('<td>').text(i + 1)); // Add index as the first column
+                        row.append($('<td>').text(employee.RowNum)); // Add index as the first column
                         // Add edit button column with a button
                         //var editBtn = $('<button>').addClass('btn btn-primary btn-sm').text('Edit').on('click', (function (emp) {
                         //    return function () {
@@ -430,7 +529,7 @@
                 }
             });
         }
- </script>
+    </script>
     <asp:UpdatePanel ID="UpdatePanel1" runat="server">
         <ContentTemplate>
             <div class="card">
@@ -467,10 +566,10 @@
                             <table class="table table-sm table-hover caption-top display" id="myTable">
                                 <caption>List of Applicant</caption>
                                 <thead class="table-info">
-                                    <tr>
+                                    <%--<tr>
                                         <th scope="col">#</th>
                                         <th scope="col">Action</th>
-                                        <%--<th scope="col">Print</th>--%>
+                                        <th scope="col">Print</th>
                                         <th scope="col">Application_ID</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Father's Name</th>
@@ -483,11 +582,29 @@
                                         <th scope="col">Interest</th>
                                         <th scope="col">Photo</th>
                                         <th scope="col">Delete</th>
-                                    </tr>
+                                    </tr>--%>
                                 </thead>
                                 <tbody></tbody>
 
                             </table>
+                            <nav aria-label="Page navigation example" class="mt-2 d-flex">
+                                <ul class="pagination   Archive">
+                                    <li class="page-item2" onclick="preClick()">
+                                        <a class="page-link" href="#" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <div class="d-flex  " id="list">
+                                    </div>
+
+                                    <li class="page-item2" onclick="nextClick()">
+                                        <a class="page-link" href="#" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+
                         </div>
                     </div>
                 </div>
