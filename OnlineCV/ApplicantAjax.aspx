@@ -8,6 +8,7 @@
     <script type="text/javascript">
         var educountrow = 0;
         var currentPage = 1;
+        var LastPage = 1;
         function UploadFile() {
             var empId = $('#applicationid').val();
             var imagepath = $('#existingImgurl').val();
@@ -77,6 +78,12 @@
             $('#modalAddUser').modal('hide');
             clearModal();
 
+        }
+        function ApplicantDataEntry() {
+            $('#btnupload').css({
+                'display':'none'
+            });
+            openUserModal();
         }
         function clearModal() {
             $('#applicationid').val("");
@@ -235,6 +242,19 @@
             });
 
         });
+ //        <li class="page-item2" onclick="preClick()">
+ //    <a class="page-link" href="#" aria-label="Previous">
+ //        <span aria-hidden="true">&laquo;</span>
+ //    </a>
+ //</li>
+ //<div class="d-flex  " id="list">
+ //</div>
+
+ //<li class="page-item2" onclick="nextClick()">
+ //    <a class="page-link" href="#" aria-label="Next">
+ //        <span aria-hidden="true">&raquo;</span>
+ //    </a>
+ //</li>
        
         function addpagination(totalPages, current) {
             if (totalPages > 0) {
@@ -247,19 +267,45 @@
                 }
                 if (endPage > totalPages) {
                     endPage = totalPages;
-                    If(endPage > 10)
-                    startPage = endPage - 9;
+                    if(endPage > 10){
+                        startPage = endPage - 9;
+                    }                 
                 }
                 console.log(" totalpage", totalPages)
                 let list = "";
+                if (current>1) {
+                    list += `<li class="page-item"><a class="page-link" onclick="FirstPageClick()">First</a></li>
+                             <li class="page-item"><a class="page-link" onclick="preClick()"><span>&laquo;</span></a></li>`
+                }
+
                 for (let i = startPage; i <= endPage; i++) {
                     list += `<li class="page-item"><a class="page-link ${i == currentPage ? 'active' : ''}"    onclick="paginationClick(${i})">${i}</a></li>`
+                }
+                if (current < totalPages) {
+                    list += `<li class="page-item"><a class="page-link" onclick="nextClick()"><span aria-hidden="true">&raquo;</span></a></li>
+                             <li class="page-item"><a class="page-link" onclick="LastPageClick()">Last</a></li>`
                 }
                 $("#list").empty();
                 $("#list").append(list);
                 
             }         
 
+        }
+        function LastPageClick() {
+            currentPage = LastPage;
+            LoadApplicantData();
+        }
+        function FirstPageClick() {
+            currentPage=1;
+            LoadApplicantData();
+        }
+        function preClick() {
+            currentPage--;
+            LoadApplicantData();
+        }
+        function nextClick() {
+            currentPage++;
+            LoadApplicantData();
         }
         function paginationClick(pageNum) {
             currentPage = pageNum;
@@ -354,6 +400,7 @@
                     var jsonData = JSON.parse(data.d);
                     var emplist = jsonData.EmployeeData;
                     var TotalPages = jsonData.TotalPage;
+                    LastPage = TotalPages;
                     addpagination(TotalPages, currentPage);
                     //AddActive(currentPageNumber - 1);
                     for (var i = 0; i < emplist.length; i++) {
@@ -451,6 +498,7 @@
                                 });
                                 $('#applicationid').val(employee.id);
                                 $('#existingImgurl').val(employee.photo_url);
+                                $('#btnupload').css('display', 'block');
                                 //<option value="1" selected>Pakistan</option>
                                 //<option value="2">Iran</option>
                                 //<option value="3">Iraq</option>
@@ -543,7 +591,7 @@
                 <div class="card-header">
                     <div class="row">
                         <div class="col-md-11" style="margin-top: 21px;">
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddUser">
+                            <button type="button" class="btn btn-primary" onclick="ApplicantDataEntry()">
                                 <i class="bi bi-plus fw-bold"></i>
                             </button>
                         </div>
@@ -588,20 +636,20 @@
 
                             </table>
                             <nav aria-label="Page navigation example" class="mt-2 d-flex">
-                                <ul class="pagination   Archive">
-                                    <li class="page-item2" onclick="preClick()">
+                                <ul class="pagination">
+                                   <%-- <li class="page-item2" onclick="preClick()">
                                         <a class="page-link" href="#" aria-label="Previous">
                                             <span aria-hidden="true">&laquo;</span>
                                         </a>
-                                    </li>
+                                    </li>--%>
                                     <div class="d-flex  " id="list">
                                     </div>
 
-                                    <li class="page-item2" onclick="nextClick()">
+                                    <%--<li class="page-item2" onclick="nextClick()">
                                         <a class="page-link" href="#" aria-label="Next">
                                             <span aria-hidden="true">&raquo;</span>
                                         </a>
-                                    </li>
+                                    </li>--%>
                                 </ul>
                             </nav>
 
