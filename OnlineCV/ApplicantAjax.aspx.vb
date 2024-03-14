@@ -58,6 +58,8 @@ Public Class ApplicantAjax
 
     <WebMethod()>
     Public Shared Function InsertEmpAndEducationInfo(jsonData As String, empData As String) As String
+
+
         Return "Inserted Successfully"
     End Function
 
