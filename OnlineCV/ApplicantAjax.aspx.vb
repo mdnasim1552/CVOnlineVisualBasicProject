@@ -58,9 +58,48 @@ Public Class ApplicantAjax
 
     <WebMethod()>
     Public Shared Function InsertEmpAndEducationInfo(jsonData As String, empData As String) As String
+        Dim eduDataList = JsonConvert.DeserializeObject(Of List(Of EducationalQualification))(jsonData)
+        Dim emp = JsonConvert.DeserializeObject(Of Employee)(empData)
+        Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT"
+
+        Dim _p As IProcessAccess = New ProcessAccess()
+        Dim jobCallType = "InsertjobapplicationRecord"
+        Dim jobparameters As SqlParameter() = New SqlParameter() {
+            New SqlParameter("@CallType", jobCallType),
+            New SqlParameter("@Desc1", emp.fullname),
+            New SqlParameter("@Desc2", emp.fathername),
+            New SqlParameter("@Desc3", emp.email),
+            New SqlParameter("@Desc4", emp.mobile),
+            New SqlParameter("@Desc5", emp.address),
+            New SqlParameter("@Desc6", emp.gender),
+            New SqlParameter("@Desc7", emp.region),
+            New SqlParameter("@Desc8", emp.declaration),
+            New SqlParameter("@Desc9", emp.interest),
+            New SqlParameter("@Desc10", emp.photo_url)
+        }
+        Dim primayKey As String = _p.GetTransactionalOperation(procedureName, jobparameters)
+        If primayKey IsNot Nothing Then
+            Dim CallType = "InsertEducational_QualificationRecord"
+            For Each row As EducationalQualification In eduDataList
+                Dim eduparameters As SqlParameter() = New SqlParameter() {
+                    New SqlParameter("@CallType", CallType),
+                    New SqlParameter("@Desc1", row.exam),
+                    New SqlParameter("@Desc2", row.board),
+                    New SqlParameter("@Desc3", row.year),
+                    New SqlParameter("@Desc4", row.result),
+                    New SqlParameter("@Desc5", primayKey)
+                }
+                Dim Eresult As String = _p.GetTransactionalOperation(procedureName, eduparameters)
+                If Eresult Is Nothing Then
+                    Return "Error"
+                End If
+            Next
+        Else
+            Return "Error"
+        End If
 
 
-        Return "Inserted Successfully"
+        Return primayKey
     End Function
 
     <WebMethod()>

@@ -67,14 +67,14 @@
 
         function openUserModal() {
             /* $('#modalAddUser').modal('hide');*/
-            $('.modal-backdrop').remove();
+            //$('.modal-backdrop').remove();
             $('#modalAddUser').modal('toggle', {
                 backdrop: 'static',
                 keyboard: false
             });
         }
         function closeUserModal() {
-            $('.modal-backdrop').remove();
+            //$('.modal-backdrop').remove();
             $('#modalAddUser').modal('hide');
             clearModal();
 
@@ -83,6 +83,7 @@
             $('#btnupload').css({
                 'display':'none'
             });
+            clearModal();
             openUserModal();
         }
         function clearModal() {
@@ -117,6 +118,7 @@
             $('#board').val('');
             $('#year').val('');
             $('#result').val('');
+            $('#existingImgurl').val('');
         }
         $(document).ready(function () {
 
@@ -226,6 +228,15 @@
                         dataType: "json",
                         data: JSON.stringify({ jsonData: jsonData, empData: empData }),
                         success: function (response) {
+                            if (response != "Error") {
+                                $('#applicationid').val(response.d);
+                                UploadFile();
+                                LoadApplicantData();
+                            }
+                            $('#btnupload').css({
+                                'display': 'block'
+                            });
+                            LastPageClick();
                             showContent('Data Inserted successfully');
                         },
                         error: function (error) {
@@ -604,7 +615,8 @@
                                 <option value="50">50</option>
                                 <option value="100">100</option>
                                 <option value="200">200</option>
-                                <option value="5000">5000</option>
+                                <option value="1000">1000</option>
+                                <option value="2000">2000</option>
                             </select>
 
                         </div>
@@ -659,7 +671,7 @@
             </div>
 
 
-            <div id="modalAddUser" class="modal animated slideInLeft " role="dialog" data-keyboard="false" data-backdrop="static">
+            <div id="modalAddUser" class="modal animated slideInLeft " role="dialog"  data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
