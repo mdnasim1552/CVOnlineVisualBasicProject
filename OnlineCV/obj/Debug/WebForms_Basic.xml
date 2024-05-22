@@ -449,6 +449,42 @@ Auto-generated field.
 To modify move field declaration from designer file to code-behind file.
 </remarks>
 </member>
+<member name="F:OnlineCV.ControlTest2._ScriptManager1">
+<summary>
+ScriptManager1 control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.ControlTest2._UpdatePanel1">
+<summary>
+UpdatePanel1 control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.ControlTest2._ApplicantControl">
+<summary>
+ApplicantControl control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.ControlTest2._UpdateControl">
+<summary>
+UpdateControl control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
 <member name="F:OnlineCV.ControlTestUsingAjax._HiddenLabelText">
 <summary>
 HiddenLabelText control.
@@ -650,6 +686,15 @@ To modify move field declaration from designer file to code-behind file.
 <member name="F:OnlineCV.SiteMaster._lnkbtnDelete">
 <summary>
 lnkbtnDelete control.
+</summary>
+<remarks>
+Auto-generated field.
+To modify move field declaration from designer file to code-behind file.
+</remarks>
+</member>
+<member name="F:OnlineCV.UpdateControl._lnkbtnRefresh">
+<summary>
+lnkbtnRefresh control.
 </summary>
 <remarks>
 Auto-generated field.

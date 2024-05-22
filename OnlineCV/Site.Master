@@ -118,6 +118,7 @@
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/ApplicantList">Applicant List</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/ApplicantAjax">ApplicantAjax</a></li>
                         <li class="nav-item"><a class="nav-link" runat="server" href="~/ControlTest">Applicant Control</a></li>
+                        <li class="nav-item"><a class="nav-link" runat="server" href="~/ControlTest2">Applicant Control2</a></li>
                          <li class="nav-item"><a class="nav-link" runat="server" href="~/ControlTestUsingAjax">Ajax Control</a></li>
                     </ul>
                 </div>

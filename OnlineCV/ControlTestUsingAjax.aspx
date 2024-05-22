@@ -11,11 +11,16 @@
     <div runat="server" id="sortable" visible="false">
         <!-- Placeholder for dynamically loaded control -->
     </div>
+    <div id="popupContact">
 
+    </div>
+    <iframe id="ifrmWizard" style="width:100%;height:1000px;"></iframe> 
     <script type="text/javascript">
         $(document).ready(function () {
-            // Define click event handler for the load control button           
-           
+            // Define click event handler for the load control button 
+            //$("#popupContact").load("ApplicantList.aspx");
+            $("#ifrmWizard").attr("src", "https://localhost:44368/ApplicantList.aspx");
+          
         });
         function setLabelText() {
             $("#<%= HiddenLabelText.ClientID %>").val('nasim');
