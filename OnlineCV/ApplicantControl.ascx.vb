@@ -67,14 +67,25 @@ Public Class ApplicantControl
         Me.GetApplicantList()
         Me.Data_Bind()
     End Sub
+    Protected Overrides Sub OnInit(ByVal e As EventArgs)
+        MyBase.OnInit(e)
+        Dim updateControl As UpdateControl = DirectCast(Me.Parent.FindControl("UpdateControl"), UpdateControl)
+        If updateControl IsNot Nothing Then
+            AddHandler updateControl.RefreshApplicantControl, AddressOf Me.OnRefreshApplicantControl
+        End If
+    End Sub
 
+    Protected Sub OnRefreshApplicantControl(ByVal sender As Object, ByVal e As EventArgs)
+        Me.GetApplicantList()
+        Me.Data_Bind()
+    End Sub
     Public Sub Data_Bind()
         Dim dt As DataTable = DirectCast(ViewState("jobapplication"), DataTable)
         Me.gvapplicant.PageSize = Convert.ToInt32(Me.ddlpagesize.SelectedValue.ToString())
         Me.gvapplicant.DataSource = dt
         Me.gvapplicant.DataBind()
     End Sub
-    Private Sub GetApplicantList()
+    Public Sub GetApplicantList()
         Dim procedureName As String = "SP_UTILITY_EMPLOYEE_MGT02"
         Dim CallType = "GETJOBAPPLICATIONS"
         Dim parameters As SqlParameter() = New SqlParameter() {

@@ -184,6 +184,7 @@
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
     <Content Include="ControlTest.aspx" />
+    <Content Include="ControlTest2.aspx" />
     <Content Include="ControlTestUsingAjax.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
@@ -267,6 +268,7 @@
     <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="UpdateControl.ascx" />
     <Content Include="User_photo.png" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -310,6 +312,13 @@
     </Compile>
     <Compile Include="ControlTest.aspx.vb">
       <DependentUpon>ControlTest.aspx</DependentUpon>
+      <SubType>ASPXCodebehind</SubType>
+    </Compile>
+    <Compile Include="ControlTest2.aspx.designer.vb">
+      <DependentUpon>ControlTest2.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ControlTest2.aspx.vb">
+      <DependentUpon>ControlTest2.aspx</DependentUpon>
       <SubType>ASPXCodebehind</SubType>
     </Compile>
     <Compile Include="ControlTestUsingAjax.aspx.designer.vb">
@@ -366,6 +375,13 @@
     </Compile>
     <Compile Include="Site.Master.vb">
       <DependentUpon>Site.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UpdateControl.ascx.designer.vb">
+      <DependentUpon>UpdateControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateControl.ascx.vb">
+      <DependentUpon>UpdateControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ViewSwitcher.ascx.vb">
