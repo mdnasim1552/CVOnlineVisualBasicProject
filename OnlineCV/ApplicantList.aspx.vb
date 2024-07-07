@@ -28,6 +28,9 @@ Public Class About
         AddHandler lnkbtnSave.Click, AddressOf lbtnUpdate_Click
         lnkbtnSave.Text = "Update"
     End Sub
+    Protected Overrides Sub OnPreRender(e As EventArgs)
+        Response.Write("sdsadasdasdad")
+    End Sub
 
     Private Sub SaveValue()
         Dim dt As DataTable = DirectCast(ViewState("jobapplication"), DataTable)
