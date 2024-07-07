@@ -93,7 +93,6 @@ F:\Visual_Basic\OnlineCV\OnlineCV\bin\Newtonsoft.Json.xml
 F:\Visual_Basic\OnlineCV\OnlineCV\bin\Antlr3.Runtime.pdb
 F:\Visual_Basic\OnlineCV\OnlineCV\bin\Microsoft.AspNet.FriendlyUrls.xml
 F:\Visual_Basic\OnlineCV\OnlineCV\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-F:\Visual_Basic\OnlineCV\OnlineCV\bin\EnvDTE.xml
 F:\Visual_Basic\OnlineCV\OnlineCV\bin\de\Microsoft.ReportViewer.Common.resources.dll
 F:\Visual_Basic\OnlineCV\OnlineCV\bin\es\Microsoft.ReportViewer.Common.resources.dll
 F:\Visual_Basic\OnlineCV\OnlineCV\bin\fr\Microsoft.ReportViewer.Common.resources.dll
@@ -162,3 +161,9 @@ F:\Visual_Basic\OnlineCV\OnlineCV\obj\Debug\OnlineCV.vbproj.CopyComplete
 F:\Visual_Basic\OnlineCV\OnlineCV\obj\Debug\OnlineCV.dll
 F:\Visual_Basic\OnlineCV\OnlineCV\obj\Debug\WebForms_Basic.xml
 F:\Visual_Basic\OnlineCV\OnlineCV\obj\Debug\OnlineCV.pdb
+F:\Visual_Basic\OnlineCV\OnlineCV\bin\Microsoft.VisualStudio.Shell.Interop.dll
+F:\Visual_Basic\OnlineCV\OnlineCV\bin\Microsoft.VisualStudio.Shell.Interop.8.0.dll
+F:\Visual_Basic\OnlineCV\OnlineCV\bin\Microsoft.VisualStudio.OLE.Interop.dll
+F:\Visual_Basic\OnlineCV\OnlineCV\bin\Microsoft.VisualStudio.TextManager.Interop.dll
+F:\Visual_Basic\OnlineCV\OnlineCV\bin\Microsoft.VisualStudio.TextManager.Interop.8.0.dll
+F:\Visual_Basic\OnlineCV\OnlineCV\bin\Microsoft.MSXML.dll
